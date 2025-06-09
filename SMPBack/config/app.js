@@ -4,6 +4,8 @@ import express from 'express'
 import morgan from 'morgan' 
 import helmet from 'helmet' 
 import cors from 'cors' 
+import authRoutes from '../src/auth/auth.routes.js'
+import { limiter } from '../middlewares/rate.limit.js'
 
 
 
@@ -12,11 +14,13 @@ export const config = (app)=>{
     app.use(express.urlencoded({extended: true}))
     app.use(cors())
     app.use(helmet())
+    app.use(limiter)
     app.use(morgan('dev'))
 }
 
 export const routes = (app)=>{
-
+    //Rutas públicas
+    app.use(authRoutes)
 }
 
 
