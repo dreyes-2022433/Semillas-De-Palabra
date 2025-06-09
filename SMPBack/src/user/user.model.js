@@ -22,15 +22,18 @@ const userSchema = Schema(
         },
         CUI: {
             type: String,
-            required: [true, 'User is required'],
             unique: true, 
-            maxLength: [15, `Can´t be overcome 15 characters`]
+            maxLength: [13, `Can´t be overcome 13 characters`]
         },
         role: {
             type: String,
             required: [true, 'Role is required'],
             uppercase: true,
             enum: ['ADMIN', 'USER', 'HELPER'],
+        },
+        status: {
+            type: Boolean,
+            default: true,
         }
     }
 )
