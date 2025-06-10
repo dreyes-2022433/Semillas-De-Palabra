@@ -22,14 +22,12 @@ const moduleSchema = Schema(
             ref: 'User',
             required: [true, 'User ID is required']
         },
-        progress: {
-            type: Number,
-            default: 0
-        },
         content: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Content',
-            required: [true, 'Content ID is required']
+            ref: 'Content'
+        },
+        img :{
+            type: String
         }
     }
 )
