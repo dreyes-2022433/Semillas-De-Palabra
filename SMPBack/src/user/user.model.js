@@ -34,6 +34,10 @@ const userSchema = Schema(
         status: {
             type: Boolean,
             default: true,
+        },
+        progress: {
+            type: Number,
+            default: 0
         }
     }
 )
