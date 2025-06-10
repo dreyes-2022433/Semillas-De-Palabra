@@ -1,6 +1,5 @@
-//Module de Contenid
-import mongoose, { Sechema, model } from "mongoose";
-
+import mongoose, { Schema, model } from "mongoose";
+ 
 const contentSchema = Schema(
     {
         name: {
@@ -8,24 +7,82 @@ const contentSchema = Schema(
             maxLength: [100, `Can´t be overcome 100 characters`],
             required: [true, 'Name is required']
         },
-        question: [
+        audios: [
             {
-                audio: { 
-                    type: String 
+                audio: {
+                    type: String
                 },
-                images: { 
-                    type: String 
+                img1:{
+                    type: String
                 },
-                video: { 
-                    type: String 
+                answer1:{
+                    type: Boolean
                 },
-                text: { 
-                    type: String 
-                }    
+                img2:{
+                    type: String
+                },
+                answer2:{
+                    type: Boolean
+                },
+                img3:{
+                    type: String
+                },
+                answer3:{
+                    type: Boolean
+                },
+                img4:{
+                    type: String,
+                },
+                answer4:{
+                    type: Boolean
+                },
+            }
+        ],
+        videos: [
+            {
+                string: {
+                    mp4: {
+                        type: String
+                    }
+                }
+            }
+        ],
+        image: [
+            {
+                Mainimg:{
+                    type: String
+                },
+                mainaudio: {
+                    type: String
+                },
+                audio1:{
+                    type: String
+                },
+                answer1:{
+                    type: Boolean
+                },
+                audio2:{
+                    type: String
+                },
+                answer2:{
+                    type: Boolean
+                },
+                audio3:{
+                    type: String
+                },
+                answer3:{
+                    type: Boolean
+                },
+                audio4:{
+                    type: String
+                },
+                answer4:{
+                    type: Boolean
+                },
             }
         ]
     }
 )
-
+ 
 //Crear y exportar el modelo
 export default model('Content', contentSchema)
