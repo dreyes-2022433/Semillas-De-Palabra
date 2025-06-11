@@ -14,3 +14,13 @@ export const loginRequest = async (user) => {
     return { error: true, error }
   }
 }
+
+export const registerRequest = async (user) => {
+  try {
+    return await api.post('/register', user, {
+      type: 'multipart/form-data'
+    })
+  } catch (error) {
+    return { error: true, error }
+  }
+}
