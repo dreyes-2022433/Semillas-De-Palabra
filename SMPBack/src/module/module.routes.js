@@ -1,5 +1,10 @@
 import { Router } from 'express'
-import { createModule, deleteModule, getModules, updateModule } from './module.controller.js'
+import { 
+    createModule, 
+    deleteModule, 
+    getModules, 
+    updateModule 
+} from './module.controller.js'
 
 const api = Router()
 
