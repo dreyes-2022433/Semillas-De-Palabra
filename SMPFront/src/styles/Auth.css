@@ -1,0 +1,122 @@
+/* Estilos adicionales para las páginas de autenticación */
+
+/* Variables de colores para mantener consistencia */
+:root {
+  --forest: #386641;
+  --grass: #6a994e;
+  --lime: #a7c957;
+  --cream: #f2e8cf;
+  --terracotta: #bc4749;
+}
+
+/* Clases de utilidad para los colores */
+.bg-forest {
+  background-color: var(--forest);
+}
+
+.bg-grass {
+  background-color: var(--grass);
+}
+
+.bg-lime {
+  background-color: var(--lime);
+}
+
+.bg-cream {
+  background-color: var(--cream);
+}
+
+.bg-terracotta {
+  background-color: var(--terracotta);
+}
+
+.text-forest {
+  color: var(--forest);
+}
+
+.text-grass {
+  color: var(--grass);
+}
+
+.text-lime {
+  color: var(--lime);
+}
+
+.text-cream {
+  color: var(--cream);
+}
+
+.text-terracotta {
+  color: var(--terracotta);
+}
+
+.border-forest {
+  border-color: var(--forest);
+}
+
+.border-grass {
+  border-color: var(--grass);
+}
+
+.border-lime {
+  border-color: var(--lime);
+}
+
+.border-cream {
+  border-color: var(--cream);
+}
+
+.border-terracotta {
+  border-color: var(--terracotta);
+}
+
+.hover\:bg-forest:hover {
+  background-color: var(--forest);
+}
+
+.hover\:bg-grass:hover {
+  background-color: var(--grass);
+}
+
+.hover\:text-forest:hover {
+  color: var(--forest);
+}
+
+.focus\:border-forest:focus {
+  border-color: var(--forest);
+}
+
+.placeholder\:text-grass::placeholder {
+  color: var(--grass);
+}
+
+/* Animaciones suaves para los formularios */
+.auth-card {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Efectos de hover para los botones */
+.auth-button {
+  transition: all 0.3s ease;
+}
+
+.auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para los inputs con focus */
+.auth-input:focus {
+  box-shadow: 0 0 0 3px rgba(167, 201, 87, 0.1);
+}
