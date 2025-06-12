@@ -1,8 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Login } from '../../components/Auth/Login.jsx'
-import { Register } from '../../components/Auth/Register.jsx'
 import { useState } from "react"
-import { Login } from "../../components/Auth/Login.jsx"
 import { Register } from "../../components/Auth/Register.jsx"
 
 //Componente exportado por Named (Quiero tener más componentes en un archivo)
