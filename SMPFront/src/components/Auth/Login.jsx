@@ -9,13 +9,18 @@ import {
   InputRightElement,
   Text,
   useToast,
-  Image
+  Image,
+  VStack,
+  HStack,
+  Divider,
+  Flex
 } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import { useLogin } from '../../shared/useLogin.jsx'
 import logo from '../../assets/logo.png'
 
 const MotionBox = motion(Box)
+const MotionText = motion(Text)
 
 export const Login = ({ handleIsLogin }) => {
   const { login, isLoading } = useLogin()
@@ -58,110 +63,152 @@ export const Login = ({ handleIsLogin }) => {
   return (
     <Box
       minH="100vh"
-      w="100%"
-      bg="linear-gradient(to bottom right, #006400, #32CD32)"
+      w="145%"
+      bgGradient="linear(to-br, green.100, green.50, white)"
       display="flex"
-      flexDirection={{ base: 'column', md: 'row' }}
+      justifyContent="center"
+      alignItems="center"
+      px={4}
     >
       <MotionBox
-        w={{ base: '100%', md: '40%' }}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        bg="green.800"
-        p={4}
-        initial={{ opacity: 0, x: -100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <Image
-          src={logo}
-          alt="Logo Semilla de Palabras"
-          boxSize="200px"
-          objectFit="contain"
-        />
-      </MotionBox>
-
-      <MotionBox
-        w={{ base: '100%', md: '60%' }}
+        w="100%"
+        maxW="1100px"
+        mx="auto"
         bg="white"
-        borderRadius={{ base: '0', md: 'lg' }}
-        boxShadow="lg"
-        p={8}
+        borderRadius="2xl"
+        boxShadow="dark-lg"
+        overflow="hidden"
         display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
+        flexDirection={{ base: 'column', md: 'row' }}
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
       >
-        <Text
-          fontSize="3xl"
-          fontWeight="bold"
-          color="green.600"
-          mb={6}
-          fontFamily="'Pier Sans', sans-serif"
+        <MotionBox
+          w={{ base: '100%', md: '50%' }}
+          bgGradient="linear(to-br, green.400, green.500, green.600)"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          p={10}
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
         >
-          Accede a tu Huerto de Palabras
-        </Text>
-
-        <FormControl id="CUI" mb={4} isInvalid={!CUIValid}>
-          <FormLabel>CUI o Nombre de usuario</FormLabel>
-          <Input
-            type="text"
-            placeholder="CUI"
-            value={formData.CUI}
-            onChange={(e) => handleValueChange(e.target.value, 'CUI')}
-            onBlur={(e) => handleValidationOnBlur(e.target.value, 'CUI')}
+          <Image
+            src={logo}
+            alt="Logo"
+            boxSize={{ base: '140px', md: '220px' }}
+            objectFit="contain"
           />
-        </FormControl>
+        </MotionBox>
 
-        <FormControl id="password" mb={6} isInvalid={!passwordValid}>
-          <FormLabel>Contraseña</FormLabel>
-          <InputGroup>
-            <Input
-              type={showPassword ? 'text' : 'password'}
-              placeholder="Contraseña"
-              value={formData.password}
-              onChange={(e) => handleValueChange(e.target.value, 'password')}
-              onBlur={(e) => handleValidationOnBlur(e.target.value, 'password')}
-            />
-            <InputRightElement>
-              <Button
-                variant="link"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? 'Ocultar' : 'Mostrar'}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-        </FormControl>
-
-        <Button
-          colorScheme="green"
-          width="100%"
-          onClick={handleLogin}
-          isLoading={isLoading}
-          isDisabled={!CUIValid || !passwordValid}
-          mb={4}
+        <MotionBox
+          w={{ base: '100%', md: '50%' }}
+          p={{ base: 8, md: 12 }}
+          bg="white"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
         >
-          Iniciar Sesión
-        </Button>
+          <VStack spacing={8} align="stretch">
+            <MotionText
+              fontSize={{ base: '2xl', md: '3xl' }}
+              fontWeight="bold"
+              color="green.600"
+              textAlign="center"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+            >
+              Bienvenido a Huerto de Palabras
+            </MotionText>
 
-        <Text fontSize="sm" color="gray.500">
-          ¿Olvidaste tu contraseña?{' '}
-          <Text as="span" color="green.600" cursor="pointer">
-            Recuperarla aquí
-          </Text>
-        </Text>
+            <FormControl id="CUI" isInvalid={!CUIValid}>
+              <FormLabel>CUI o Usuario</FormLabel>
+              <Input
+                type="text"
+                placeholder="1234567890123"
+                value={formData.CUI}
+                onChange={(e) => handleValueChange(e.target.value, 'CUI')}
+                onBlur={(e) => handleValidationOnBlur(e.target.value, 'CUI')}
+                variant="filled"
+                focusBorderColor="green.400"
+              />
+            </FormControl>
 
-        <Text fontSize="sm" mt={4}>
-          ¿No tienes cuenta?{' '}
-          <Text as="span" color="green.600" cursor="pointer" onClick={handleIsLogin}>
-            Regístrate aquí
-          </Text>
-        </Text>
+            <FormControl id="password" isInvalid={!passwordValid}>
+              <FormLabel>Contraseña</FormLabel>
+              <InputGroup>
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={(e) => handleValueChange(e.target.value, 'password')}
+                  onBlur={(e) => handleValidationOnBlur(e.target.value, 'password')}
+                  variant="filled"
+                  focusBorderColor="green.400"
+                />
+                <InputRightElement width="4.5rem">
+                <Button
+                  h="1.75rem"
+                  size="sm"
+                  backgroundColor="transparent"
+                  _hover={{ backgroundColor: 'transparent' }}
+                  _active={{ backgroundColor: 'transparent' }}
+                  _focus={{ boxShadow: 'none' }}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? 'Ocultar' : 'Mostrar'}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          </FormControl>
+
+
+            <Button
+              colorScheme="green"
+              onClick={handleLogin}
+              isLoading={isLoading}
+              isDisabled={!CUIValid || !passwordValid}
+              width="full"
+              borderRadius="md"
+              fontWeight="bold"
+              transition="all 0.3s"
+              _hover={{ transform: 'scale(1.03)', boxShadow: 'xl' }}
+            >
+              Iniciar Sesión
+            </Button>
+
+            <Divider borderColor="gray.300" />
+
+            <HStack spacing={1} justifyContent="center">
+              <Text fontSize="sm" color="gray.600">
+                ¿Olvidaste tu contraseña?
+              </Text>
+              <Text fontSize="sm" color="green.500" fontWeight="medium" cursor="pointer">
+                Recuperarla aquí
+              </Text>
+            </HStack>
+
+            <Flex justifyContent="center" alignItems="center">
+              <Text fontSize="sm" color="gray.600">¿No tienes cuenta?</Text>
+              <Text
+                fontSize="sm"
+                color="green.600"
+                cursor="pointer"
+                fontWeight="medium"
+                ml={1}
+                onClick={handleIsLogin}
+              >
+                Regístrate aquí
+              </Text>
+            </Flex>
+          </VStack>
+        </MotionBox>
       </MotionBox>
     </Box>
   )
