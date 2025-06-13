@@ -22,10 +22,18 @@ const moduleSchema = Schema(
             ref: 'User',
             required: [true, 'User ID is required']
         },
-        content: {
+        imageQuestions: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ImageQuestion'
+        }],
+        videoLessons: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Content'
-        },
+            ref: 'VideoLesson'
+        }],
+        audioQuestions: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'AudioQuestion'
+        }],
         img :{
             type: String
         }

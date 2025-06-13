@@ -1,91 +1,22 @@
-import Module from './module.model.js'
-import User from '../user/user.model.js'
+import Module from '../module/module.model.js'
+import VideoLesson from './videoLesson.model.js'
 
-export const createModule = async(req, res) => {
+export const createVideoLesson = async(req, res) => {
     try {
-        const { name, description, user, img } = req.body
-        
-        const addModule = new Module(
+        const { name, video, order, module } = req.body
+
+        const addVideoLesson = new VideoLesson(
             {
                 name,
-                description,
-                user,
-                img
+                video,
+                order,
+                module
             }
         )
 
-        const userExist = await User.findById(user)
-
-        if(!userExist){
-            return res.status(404).send(
-                {
-                    success: false,
-                    message: 'User not found'
-                }
-            )
-        }
-
-        await addModule.save()
-
-        return res.send(
-            {
-                success: true,
-                message: 'Module added successfully',
-                addModule
-            }
-        )
-    } catch (err) {
-        console.error(err)
-        return res.status(500).send(
-            {
-                success: false,
-                message: 'General error',
-                err
-            }
-        )
-    }
-}
-
-export const getModules = async(req, res) => {
-    try {
-        const modules = await Module.find()
-            .select('-user -content')
-
-        if(modules.length === 0){
-            return res.send(
-                {
-                    success: false,
-                    message: 'Modules not found'
-                }
-            )
-        }
-
-        return res.send(
-            {
-                success: true,
-                message: 'Modules found',
-                modules
-            }
-        )
-    } catch (err) {
-        console.error(err)
-        return res.status(500).send(
-            {
-                success: false,
-                message: 'General error',
-                err
-            }
-        )
-    }
-}
-
-export const deleteModule = async(req, res) => {
-    try {
-        const { idModule } = req.body
-
-        const module = await Module.findById(idModule)
-
-        if(!module){
+        const moduleExist = await Module.findById(module)
+        
+        if(!moduleExist){
             return res.status(404).send(
                 {
                     success: false,
@@ -94,13 +25,13 @@ export const deleteModule = async(req, res) => {
             )
         }
 
-        await Module.findByIdAndDelete(idModule)
+        await addVideoLesson.save()
 
         return res.send(
             {
                 success: true,
-                message: 'Module deleted successfully',
-                module
+                message: 'Video lesson added successfully',
+                addVideoLesson
             }
         )
     } catch (err) {
@@ -115,28 +46,95 @@ export const deleteModule = async(req, res) => {
     }
 }
 
-export const updateModule = async(req, res) => {
+export const getVideoLessons = async(req, res) => {
     try {
-        const { idModule, name, description, made, img } = req.body 
+        const videoLessons = await VideoLesson.find()
 
-        const updatedModule = await Module.findByIdAndUpdate(
-            idModule,
+        if(videoLessons.length === 0){
+            return res.send(
+                {
+                    success: false,
+                    message: 'Video lessons not found'
+                }
+            )
+        }
+
+        return res.send(
             {
-                name,
-                description,
-                made,
-                img
+                success: true,
+                message: 'Video lessons found',
+                videoLessons
+            }
+        )
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send(
+            {
+                success: false,
+                message: 'General error',
+                err
+            }
+        )
+    }
+}
+
+export const deleteVideoLesson = async(req, res) => {
+    try {
+        const { idVideoLesson } = req.body
+
+        const videoLesson = await VideoLesson.findById(idVideoLesson)
+
+        if(!videoLesson){
+            return res.status(404).send(
+                {
+                    success: false,
+                    message: 'Video lesson not found'
+                }
+            )
+        }
+
+        await VideoLesson.findByIdAndDelete(idVideoLesson)
+
+        return res.send(
+            {
+                success: true,
+                message: 'Video lesson deleted successfully',
+                videoLesson
+            }
+        )
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send(
+            {
+                success: false,
+                message: 'General error',
+                err
+            }
+        )
+    }
+}
+
+export const updateVideoLesson = async(req, res) => {
+    try {
+        const { idVideoLesson, name, video, order} = req.body
+
+        const updatedVideoLesson = await VideoLesson.findByIdAndUpdate(
+            idVideoLesson,
+            {
+               name,
+               video,
+               order 
             },
             {
                 new: true
             }
         )
 
-        if(!updatedModule){
+        if(!updatedVideoLesson){
             return res.status(404).send(
                 {
                     success: false,
-                    message: 'Module not found'
+                    message: 'Video lesson not found'
                 }
             )
         }
@@ -144,8 +142,8 @@ export const updateModule = async(req, res) => {
         return res.send(
             {
                 success: true,
-                message: 'Module updated successfully',
-                updatedModule
+                message: 'Video lesson updated successfully',
+                updatedVideoLesson
             }
         )
     } catch (err) {
