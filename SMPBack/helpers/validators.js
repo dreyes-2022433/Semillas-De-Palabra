@@ -1,7 +1,7 @@
-import { body } from "express-validator";
-import { validateErrorWithoutImg } from "./validate.error.js";
+import { body } from 'express-validator'
+import { validateErrorWithoutImg } from './validate.error.js'
+import { objectIdValid } from './db.validators.js'
 
-// ---------------------- REGISTER ------------------------------
 export const registerValidation = [
     body('name', 'Name cannot be empty and can´t be overcome 50 characters')
         .notEmpty(),
@@ -17,22 +17,18 @@ export const registerValidation = [
         validateErrorWithoutImg
 ]
 
-// ------------------------ LOGIN -----------------------------
 export const loginValidation = [
     body('userLoggin', 'CUI cannot be empty')
         .notEmpty()
         .isLowercase(),
     body('password', 'Password cannot be empty')
-        .notEmpty()
-        .isStrongPassword()
-        .isLength()
-        .withMessage('The password must be strong')
-        .isLength({min: 8}),
+        .notEmpty(),
     validateErrorWithoutImg
 ]
 
-// ----------------------- USER ----------------------
 export const validUpdateUser = [
+    body('idUser', 'Id User cannot be empty')
+        .notEmpty(),
     body('name', 'Name is optional and cannot be overcome 50 characters')
         .optional()
         .isLength({max: 50}),
@@ -46,6 +42,8 @@ export const validUpdateUser = [
 ]
 
 export const validUpdatePassword = [
+    body('idUser', 'Id User cannot be empty')
+        .notEmpty(),
     body('currentPassword', 'Current password cannot be empty')
         .notEmpty() 
         .withMessage('Password cannot be empty'),
@@ -60,9 +58,51 @@ export const validUpdatePassword = [
 ]
 
 export const validDeleteUser = [
+    body('idUser', 'Id User cannot be empty')
+        .notEmpty(),
     body('password', 'Password cannot be empty')
         .notEmpty(),
         validateErrorWithoutImg
 ]
+
+export const validCreateModule = [
+    body('name', 'name cannot be empty')
+        .notEmpty()
+        .isLength({max: 50})
+        .withMessage('Name cannot be overcome 50 characters'),
+    body('description', 'Description cannot be empty')
+        .notEmpty()
+        .isLength({max: 200})
+        .withMessage('Description cannot be overcome 200 characters'),
+    body('user', 'User cannot be empty')
+        .notEmpty()
+        .custom(objectIdValid),
+    validateErrorWithoutImg
+]
+
+export const validUpdateModule = [
+    body('idModule', 'Id Module cannot be empty')
+        .notEmpty(),
+    body('name', 'name is optional')
+        .optional()
+        .isLength({max: 50})
+        .withMessage('Name cannot be overcome 50 characters'),
+    body('description', 'Description is optional')
+        .optional()
+        .isLength({max: 200})
+        .withMessage('Description cannot be overcome 200 characters'),
+    body('made', 'Made is optional')
+        .optional(),
+    body('img', 'IMG is optional')
+        .optional(),
+    validateErrorWithoutImg
+]
+
+export const validDeleteModule = [
+    body('idModule', 'Id Module cannot be empty')
+        .notEmpty(),
+    validateErrorWithoutImg
+]
+
 
 
