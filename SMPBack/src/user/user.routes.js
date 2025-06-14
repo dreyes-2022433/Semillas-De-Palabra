@@ -1,29 +1,42 @@
-import { Router } from "express";
-import { deleteUser, updateUser, updatePassword, getAll } from "./user.controller.js";
-import { isAdmin, validateJwt } from "../../middlewares/validate.jwt.js";
-import { validUpdatePassword, validUpdateUser, validDeleteUser } from "../../helpers/validators.js";
+import { Router } from 'express'
+import { 
+    deleteUser, 
+    updateUser, 
+    updatePassword, 
+    getAll 
+} from './user.controller.js'
+
+import { 
+    isAdmin, 
+    validateJwt 
+} from '../../middlewares/validate.jwt.js'
+
+import { 
+    validUpdatePassword, 
+    validUpdateUser, 
+    validDeleteUser 
+} from '../../helpers/validators.js'
 
 const api = Router()
 
-// ---------------- ACTUALIZAR USER ------------
 api.put(
-    '/update/:id',
+    '/updateUser',
     [
         validateJwt,
         validUpdateUser
     ],
     updateUser
 )
-// ---------------- ELIMINAR USER --------------
+
 api.delete(
-    '/:id',
+    '/deleteUser',
     [
         validateJwt,
         validDeleteUser
     ],
     deleteUser
 )
-// ----------------- LISTAR USERS ---------------
+
 api.get(
     '/',
     [
@@ -32,9 +45,9 @@ api.get(
     ],
     getAll
 )
-// ----------------- UPDATE CONTRASEÑA -------------
+
 api.put(
-    '/password/:id',
+    '/updatePassword',
     [
         validateJwt,
         validUpdatePassword

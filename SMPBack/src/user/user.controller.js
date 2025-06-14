@@ -1,14 +1,12 @@
 import { checkPassword, encrypt} from '../../utils/encrypt.js'
 import User from '../user/user.model.js'
 
-// -------------------- EDITAR USUARIO ------------------
 export const updateUser = async (req, res) => {
-    const { id } = req.params;
-    const { role, password, ...data } = req.body;
+    const { idUser, name, surname, CUI } = req.body
 
     try {
-        const adminUser = req.user;
-        const userToUpdate = await User.findById(id);
+        const adminUser = req.user
+        const userToUpdate = await User.findById(idUser)
 
         if (!userToUpdate) {
             return res.status(404).send(
@@ -19,7 +17,6 @@ export const updateUser = async (req, res) => {
             )
         }
 
-        // Un ADMIN no puede modificar a otro ADMIN.
         if (adminUser.role === 'ADMIN' && userToUpdate.role === 'ADMIN' && adminUser.uid !== id) {
             return res.status(403).send(
                 {
@@ -29,8 +26,7 @@ export const updateUser = async (req, res) => {
             )
         }
 
-        // Un usuario normal solo puede editarse a sí mismo
-        if (adminUser.role !== 'ADMIN' && adminUser.uid !== id) {
+        if (adminUser.role !== 'ADMIN' && adminUser.uid !== idUser) {
             return res.status(403).send(
                 {
                     success: false,
@@ -39,9 +35,12 @@ export const updateUser = async (req, res) => {
             )
         }
 
-        // Validar si se quiere cambiar el CUI
-        if (data.CUI && data.CUI !== userToUpdate.CUI) {
-            const existingCUI = await User.findOne({ CUI: data.CUI });
+        if (CUI && CUI !== userToUpdate.CUI) {
+            const existingCUI = await User.findOne(
+                { 
+                    CUI:CUI
+                }
+            )
 
             if (existingCUI) {
                 return res.status(400).send(
@@ -53,11 +52,16 @@ export const updateUser = async (req, res) => {
             }
         }
 
-        // Actualizar usuario sin modificar la contraseña ni el rol
         const updatedUser = await User.findByIdAndUpdate(
-            id,
-            data,
-            { new: true }
+            idUser,
+            {
+                name,
+                surname,
+                CUI
+            },
+            {
+                new: true
+            }
         )
 
         return res.send(
@@ -80,15 +84,12 @@ export const updateUser = async (req, res) => {
     }
 }
 
-
-// -------------------------- ELIMINAR USUARIO ----------------------------- 
 export const deleteUser = async (req, res) => {
     try {
-        const { id } = req.params
-        const { password } = req.body
+        const { idUser, password } = req.body
 
         const adminUser = req.user
-        const userToDelete = await User.findById(id)
+        const userToDelete = await User.findById(idUser)
 
         if (!userToDelete) {
             return res.status(404).send(
@@ -99,9 +100,7 @@ export const deleteUser = async (req, res) => {
             )
         }
 
-        // Algunas restricciones
-        // Un USER solo puede eliminarse a sí mismo (validando contraseña).
-        if (adminUser.role !== 'ADMIN' && adminUser.uid !== id) {
+        if (adminUser.role !== 'ADMIN' && adminUser.uid !== idUser) {
             return res.status(403).send(
                 {
                     success: false,
@@ -110,8 +109,7 @@ export const deleteUser = async (req, res) => {
             )
         }
 
-        // Un ADMIN no puede eliminar a otro ADMIN.
-        if (adminUser.role === 'ADMIN' && userToDelete.role === 'ADMIN' && adminUser.uid !== id) {
+        if (adminUser.role === 'ADMIN' && userToDelete.role === 'ADMIN' && adminUser.uid !== idUser) {
             return res.status(403).send(
                 {
                     success: false,
@@ -120,8 +118,7 @@ export const deleteUser = async (req, res) => {
             )
         }
 
-        //Si el usuario se está eliminando a sí mismo, validar la contraseña
-        if (adminUser.uid === id) {
+        if (adminUser.uid === idUser) {
             if (!password) {
                 return res.status(400).send(
                     {
@@ -142,10 +139,8 @@ export const deleteUser = async (req, res) => {
             }
         }
 
-        // Eliminar usuario
         userToDelete.status = false
         await userToDelete.save()
-        // await User.findByIdAndDelete(id)
 
         return res.send(
             {
@@ -165,13 +160,12 @@ export const deleteUser = async (req, res) => {
     }
 }
 
-// ------------------------- ACTUALIZAR CONTRASEÑA ---------------------------
 export const updatePassword = async (req, res) => {
     try {
-        const { id } = req.params
-        const { currentPassword, newPassword } = req.body
 
-        if (id !== req.user.uid) {
+        const { idUser, currentPassword, newPassword } = req.body
+
+        if (idUser !== req.user.uid) {
             return res.status(403).send(
                 {
                     success: false,
@@ -180,7 +174,7 @@ export const updatePassword = async (req, res) => {
             )
         }
 
-        const user = await User.findById(id)
+        const user = await User.findById(idUser)
         if (!user) return res.status(404).send(
             {
                 success: false,
@@ -227,7 +221,6 @@ export const updatePassword = async (req, res) => {
     }
 }
 
-// ------------------------- LISTAR LOS USUARIOS ---------------------------------
 export const getAll = async(req, res)=>{
     const { limit , skip } = req.query
     try {
