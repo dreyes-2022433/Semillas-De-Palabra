@@ -17,7 +17,7 @@ const userSchema = Schema(
             type: String,
             required: [true, 'Password is required'],
             minLength: [8, 'Password must be 8 characters'],
-            maxLength: [25, `Can't be overcome 25 characters`],
+            //maxLength: [25, `Can't be overcome 25 characters`],
             match: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/, 'Password is not strong enough']
         },
         CUI: {
