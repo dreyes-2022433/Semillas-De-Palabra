@@ -45,7 +45,7 @@ export const useLogin = () => {
       if (loggerUser.role === 'ADMIN') {
         navigate('/admin')
       } else {
-        navigate('/home')
+        navigate('/main')
       }
     } catch (err) {
       setIsLoading(false)

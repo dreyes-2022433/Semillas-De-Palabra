@@ -63,13 +63,13 @@ export const Login = ({ handleIsLogin }) => {
   return (
     <Box
       minH="100vh"
-      w="145%"
-      bgGradient="linear(to-br, green.100, green.50, white)"
+      w="100%"
+      bgGradient="linear(to-br, green.100, green.200, white)"
       display="flex"
       justifyContent="center"
       alignItems="center"
       px={4}
-    >
+    >  
       <MotionBox
         w="100%"
         maxW="1100px"
