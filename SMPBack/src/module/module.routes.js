@@ -6,10 +6,25 @@ import {
     updateModule 
 } from './module.controller.js'
 
+import { 
+    validCreateModule, 
+    validDeleteModule, 
+    validUpdateModule 
+} from '../../helpers/validators.js'
+
+import { 
+    isAdmin, 
+    validateJwt 
+} from '../../middlewares/validate.jwt.js'
+
 const api = Router()
 
 api.post(
-    '/addModule',
+    '/addModule', [
+        validateJwt,
+        isAdmin,
+        validCreateModule
+    ],
     createModule
 )
 
@@ -19,12 +34,20 @@ api.get(
 )
 
 api.delete(
-    '/deleteModule',
+    '/deleteModule', [
+        validateJwt,
+        isAdmin,
+        validDeleteModule
+    ],
     deleteModule
 )
 
 api.put(
-    '/updateModule',
+    '/updateModule', [
+        validateJwt,
+        isAdmin,
+        validUpdateModule
+    ],
     updateModule
 )
 

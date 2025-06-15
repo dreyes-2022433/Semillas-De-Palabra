@@ -6,25 +6,51 @@ import {
     updateVideoLesson
 } from './videoLesson.controller.js'
 
+import { 
+    isAdmin, 
+    validateJwt 
+} from '../../middlewares/validate.jwt.js'
+
+import { 
+    validAddVideoLesson, 
+    validDeleteVideoLesson, 
+    validUpdaVideoLesson 
+} from '../../helpers/validators.js'
+
 const api = Router()
 
 api.post(
-    '/addVideoLesson',
+    '/addVideoLesson', [
+        validateJwt,
+        isAdmin,
+        validAddVideoLesson
+    ],
     createVideoLesson
 )
 
 api.get(
-    '/getVideoLessons',
+    '/getVideoLessons', [
+        validateJwt,
+        isAdmin
+    ],
     getVideoLessons
 )
 
 api.put(
-    '/updateVideoLesson',
+    '/updateVideoLesson', [
+        validateJwt,
+        isAdmin,
+        validUpdaVideoLesson
+    ],
     updateVideoLesson
 )
 
 api.delete(
-    '/deleteVideoLesson',
+    '/deleteVideoLesson', [
+        validateJwt,
+        isAdmin,
+        validDeleteVideoLesson
+    ],
     deleteVideoLesson
 )
 export default api

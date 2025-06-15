@@ -27,7 +27,7 @@ export const routes = (app)=>{
     app.use('/v1/module', moduleRouter)
     app.use('/v1/user', userRoutes)
     app.use('/v1/audioQuestion', audioQuestionRoutes)
-    app.use('/v1/imageQuestio', imageQuestionRoutes)
+    app.use('/v1/imageQuestion', imageQuestionRoutes)
     app.use('/v1/videoLesson', videoLessonRoutes)
 }
 

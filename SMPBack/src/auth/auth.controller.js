@@ -2,11 +2,9 @@ import User from '../user/user.model.js'
 import { checkPassword, encrypt} from '../../utils/encrypt.js'
 import { generateJwt } from '../../utils/jwt.js'
 
-// -------------------------- ADMIN POR DEFECTO -------------------------------------
 export const initAdminUser = async(req, res) => {
     try {
-        // Verificar si ya existe un usuario con rol ADMIN
-        let admin = await User.findOne(
+        const admin = await User.findOne(
             { 
                 role: 'ADMIN' 
             }
@@ -21,7 +19,7 @@ export const initAdminUser = async(req, res) => {
                 role: 'ADMIN'
             }
 
-            let newAdmin = new User(adminData)
+            const newAdmin = new User(adminData)
             newAdmin.password = await encrypt(newAdmin.password)
             await newAdmin.save();
             
@@ -40,23 +38,29 @@ export const initAdminUser = async(req, res) => {
     }
 }
 
-// ---------------------------- REGISTRAR USUARIO ------------------------------------------------
 export const register = async(req, res)=>{
     try {
-        let data = req.body
+        const { name, surname, password, CUI} = req.body
         let existingUser = await User.findOne(
             { 
-                CUI: data.CUI 
+                CUI: CUI 
             }
         )
         if (existingUser) {
             return res.status(400).send(
                 {
-                    message: `CUI ${data.CUI} is already registered. Please use a different one.`
+                    message: `CUI ${CUI} is already registered. Please use a different one.`
                 }
             )
         }
-        let user = new User(data)
+        const user = new User(
+            {
+                name, 
+                surname, 
+                password, 
+                CUI
+            }
+        )
         user.password = await encrypt(user.password)
         user.role = 'USER'
         await user.save()
@@ -76,13 +80,14 @@ export const register = async(req, res)=>{
     }
 }
 
-// --------------------------- LOGIN ---------------------------------------
 export const login = async(req, res)=>{
     try {
-        //Capturamos datos
-        let { userLoggin, password } = req.body
-        //Validar que el usuario exista
-        let user = await User.findOne({ CUI: userLoggin })
+        const { userLoggin, password } = req.body
+        const user = await User.findOne(
+            { 
+                CUI: userLoggin 
+            }
+        )
         if (!user) {
             return res.status(400).send(
                 {
@@ -98,14 +103,12 @@ export const login = async(req, res)=>{
                 }
             )
         }
-        //Verificar que la contrasela coincida
         if(user && await checkPassword(user.password, password)){
             let loggerUser = {
                 uid: user._id,
                 name: user.name,
                 role: user.role
             }
-            //Generamos el Token
             let token = await generateJwt(loggerUser)
             return res.send(
                 {

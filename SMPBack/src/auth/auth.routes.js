@@ -1,10 +1,16 @@
-import { Router } from "express";
-import { register, login } from "./auth.controller.js";
-import { registerValidation, loginValidation } from "../../helpers/validators.js";
+import { Router } from 'express'
+import { 
+    register, 
+    login 
+} from './auth.controller.js'
+
+import { 
+    registerValidation, 
+    loginValidation 
+} from '../../helpers/validators.js'
 
 const api = Router()
 
-//Registrar
 api.post(
     '/register', [
         registerValidation
@@ -12,7 +18,6 @@ api.post(
     register
 )
 
-//Login
 api.post(
     '/login', 
     [
@@ -20,7 +25,5 @@ api.post(
     ], 
     login
 )
-
-
-//Exportar 
+ 
 export default api
