@@ -1,4 +1,4 @@
-import { body } from 'express-validator'
+import { body, param } from 'express-validator'
 import { validateErrorWithoutImg } from './validate.error.js'
 import { objectIdValid } from './db.validators.js'
 
@@ -58,10 +58,11 @@ export const validUpdatePassword = [
 ]
 
 export const validDeleteUser = [
-    body('idUser', 'Id User cannot be empty')
-        .notEmpty(),
-    body('password', 'Password cannot be empty')
-        .notEmpty(),
+    param('id', 'User ID cannot be empty')
+    .notEmpty()
+    .isMongoId()
+    .withMessage('Invalid user ID format'),
+
         validateErrorWithoutImg
 ]
 
