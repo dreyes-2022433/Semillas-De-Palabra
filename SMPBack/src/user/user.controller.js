@@ -85,80 +85,53 @@ export const updateUser = async (req, res) => {
 }
 
 export const deleteUser = async (req, res) => {
-    try {
-        const { idUser, password } = req.body
+  try {
+    const { id } = req.params // <- Ahora viene de la URL
+    const adminUser = req.user
 
-        const adminUser = req.user
-        const userToDelete = await User.findById(idUser)
-
-        if (!userToDelete) {
-            return res.status(404).send(
-                {
-                    success: false,
-                    message: 'User not found'
-                }
-            )
-        }
-
-        if (adminUser.role !== 'ADMIN' && adminUser.uid !== idUser) {
-            return res.status(403).send(
-                {
-                    success: false,
-                    message: 'You can only delete your own account.'
-                }
-            )
-        }
-
-        if (adminUser.role === 'ADMIN' && userToDelete.role === 'ADMIN' && adminUser.uid !== idUser) {
-            return res.status(403).send(
-                {
-                    success: false,
-                    message: 'You cannot delete another ADMIN.'
-                }
-            )
-        }
-
-        if (adminUser.uid === idUser) {
-            if (!password) {
-                return res.status(400).send(
-                    {
-                        success: false,
-                        message: 'Password is required to delete your account'
-                    }
-                )
-            }
-
-            const isMatch = await checkPassword(userToDelete.password, password)
-            if (!isMatch) {
-                return res.status(400).send(
-                    {
-                        success: false,
-                        message: 'Incorrect password, cannot delete the user'
-                    }
-                )
-            }
-        }
-
-        userToDelete.status = false
-        await userToDelete.save()
-
-        return res.send(
-            {
-                success: true,
-                message: `Account ${userToDelete.name} deleted successfully`
-            }
-        )
-    } catch (err) {
-        console.error(err)
-        return res.status(500).send(
-            {
-                success: false,
-                message: 'General error when deleting user',
-                err
-            }
-        )
+    // Solo ADMIN puede eliminar usuarios
+    if (adminUser.role !== 'ADMIN') {
+      return res.status(403).send({
+        success: false,
+        message: 'Only admins can delete users.'
+      })
     }
+
+    const userToDelete = await User.findById(id)
+
+    if (!userToDelete) {
+      return res.status(404).send({
+        success: false,
+        message: 'User not found'
+      })
+    }
+
+    // Evita que un admin elimine a otro admin
+    if (userToDelete.role === 'ADMIN' && adminUser.uid !== id) {
+      return res.status(403).send({
+        success: false,
+        message: 'You cannot delete another ADMIN.'
+      })
+    }
+
+    userToDelete.status = false
+    await userToDelete.save()
+
+    return res.send({
+      success: true,
+      message: `Account ${userToDelete.name} deleted successfully`
+    })
+
+  } catch (err) {
+    console.error(err)
+    return res.status(500).send({
+      success: false,
+      message: 'General error when deleting user',
+      err
+    })
+  }
 }
+
 
 export const updatePassword = async (req, res) => {
     try {
