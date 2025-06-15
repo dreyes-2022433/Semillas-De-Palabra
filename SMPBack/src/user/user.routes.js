@@ -29,7 +29,7 @@ api.put(
 )
 
 api.delete(
-    '/deleteUser',
+    '/deleteUser/:id',
     [
         validateJwt,
         validDeleteUser
@@ -38,7 +38,7 @@ api.delete(
 )
 
 api.get(
-    '/',
+    '/getAll',
     [
         validateJwt,
         isAdmin
