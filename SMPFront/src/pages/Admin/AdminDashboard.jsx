@@ -12,7 +12,6 @@ import {
 } from 'lucide-react'
 
 const MotionBox = motion.div
-const MotionButton = motion.button
 
 const adminCards = [
   {
@@ -76,45 +75,45 @@ export const AdminDashboard = () => {
   if (!isAdmin) return null
 
   return (
-    <div className="main-page-container">
-      <header className="main-header">
-        <div className="header-content">
-          <div className="header-left">
-            <div className="logo-section">
-              <div className="logo-icon">
+    <div className="panel-page">
+      <header className="panel-header">
+        <div className="panel-header-content">
+          <div className="panel-header-left">
+            <div className="panel-logo">
+              <div className="panel-logo-icon">
                 <img
                   src="/src/assets/LogoSolo.png"
                   alt="Logo"
-                  className="logo-image"
+                  className="panel-logo-image"
                   onError={(e) => {
                     e.target.style.display = 'none'
                     e.target.nextSibling.style.display = 'block'
                   }}
                 />
-                <span className="logo-fallback">AD</span>
+                <span className="panel-logo-fallback">AD</span>
               </div>
-              <span className="logo-text">Administrador</span>
+              <span className="panel-logo-text">Administrador</span>
             </div>
-            <div className="search-section">
-              <div className="search-icon">
+            <div className="panel-search">
+              <div className="panel-search-icon">
                 <Search size={16} />
               </div>
               <input
                 placeholder="Buscar acción..."
-                className="search-input"
+                className="panel-search-input"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
-          <div className="header-right">
-            <button className="header-button">
+          <div className="panel-header-right">
+            <button className="panel-header-button">
               <Bell size={16} />
               <span>0</span>
             </button>
-            <button className="header-button" onClick={handleLogout}>Cerrar sesión</button>
-            <div className="user-section">
-              <div className="user-avatar">
+            <button className="panel-header-button" onClick={handleLogout}>Cerrar sesión</button>
+            <div className="panel-user">
+              <div className="panel-avatar">
                 <User size={16} />
               </div>
               <span>Admin</span>
@@ -123,14 +122,14 @@ export const AdminDashboard = () => {
         </div>
       </header>
 
-      <div className="main-layout">
-        <aside className="sidebar">
-          <nav className="sidebar-nav">
-            <ul className="sidebar-list">
+      <div className="panel-layout">
+        <aside className="panel-sidebar">
+          <nav className="panel-sidebar-nav">
+            <ul className="panel-sidebar-list">
               <li>
                 <button
                   onClick={() => setActiveSection('dashboard')}
-                  className={`sidebar-item ${activeSection === 'dashboard' ? 'active' : ''}`}
+                  className={`panel-sidebar-item ${activeSection === 'dashboard' ? 'active' : ''}`}
                 >
                   <User size={20} />
                   <span>Opciones de Administrador</span>
@@ -140,16 +139,16 @@ export const AdminDashboard = () => {
           </nav>
         </aside>
 
-        <div className="main-content">
-          <h1 className="dashboard-title" style={{ fontFamily: 'Segoe UI, Roboto, sans-serif', fontWeight: '1000' }}>
+        <div className="panel-content">
+          <h1 className="panel-welcome-title" style={{ fontFamily: 'Segoe UI, Roboto, sans-serif', fontWeight: '1000' }}>
             Panel de Administración
           </h1>
-          <div className="card-grid" style={{ display: 'grid', gap: '2rem', gridTemplateColumns: '1fr' }}>
+          <div className="panel-grid" style={{ display: 'grid', gap: '2rem', gridTemplateColumns: '1fr' }}>
             {filteredCards.length > 0 ? (
               filteredCards.map(({ id, label, icon: Icon, path, color }) => (
                 <MotionBox
                   key={id}
-                  className="dashboard-card"
+                  className="panel-dashboard-card"
                   style={{
                     backgroundColor: color,
                     fontFamily: 'Segoe UI, Roboto, sans-serif',
@@ -180,4 +179,4 @@ export const AdminDashboard = () => {
       </div>
     </div>
   )
-} 
+}

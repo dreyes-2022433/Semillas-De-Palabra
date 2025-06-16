@@ -1,5 +1,6 @@
 import { useRef } from "react"
 import { NavBars } from "../components/MainPage/NavBars"
+import './MainPages/MainPage.css'
 
 export default function MainPage() {
   const audioRefs = useRef({})
