@@ -1,109 +1,118 @@
-"use client"
-
-// src/pages/MainPage.jsx
-import { useState } from "react"
-import { Search, Home, BookOpen, TrendingUp, Award, Bell, MessageCircle, User, ChevronRight } from 'lucide-react'
-import "../styles/MainPage.css"
-import { ModuleCard } from "../components/Modules/Modulecard"
+import { useRef } from "react"
+import { NavBars } from "../components/MainPage/NavBars"
 
 export default function MainPage() {
-  const [activeSection, setActiveSection] = useState("inicio")
-  
+  const audioRefs = useRef({})
 
-  const logoUrl = "/src/assets/LogoSolo.png" 
-
-
-  const recommendedCourses = [
+  // Módulos con rutas a tus propias imágenes
+  const modules = [
     {
       id: 1,
-      title: "Fundamentos de Lectura para Adultos",
-      instructor: "María González",
-      image: "https://via.placeholder.com/300x200/6A994E/ffffff?text=Lectura",
-      isNew: true,
-      category: "Lectura Básica",
+      image: "https://www.nestleprofessional-latam.com/sites/default/files/styles/np_hero_small_small/public/2022-10/Nescafe%CC%81_Espresso_2022ok%20%281%29.png?itok=Ux0Tk86r",
+      audioText: "Aprende a leer palabras y frases básicas",
+      color: "#6A994E",
     },
     {
       id: 2,
-      title: "Escritura Creativa: Primeros Pasos",
-      instructor: "Carlos Mendoza",
-      image: "https://via.placeholder.com/300x200/A7C957/ffffff?text=Escritura",
-      isNew: true,
-      category: "Escritura",
+      image: "src/assets/vocales.png",
+      audioText: "Aprende a escribir letras y palabras",
+      color: "#A7C957",
     },
     {
       id: 3,
-      title: "Matemáticas Básicas para la Vida Diaria",
-      instructor: "Ana Rodríguez",
-      image: "https://via.placeholder.com/300x200/386641/ffffff?text=Matemáticas",
-      isNew: true,
-      category: "Matemáticas",
+      image: "",
+      audioText: "Aprende números y matemáticas básicas",
+      color: "#386641",
     },
     {
       id: 4,
-      title: "Comprensión Lectora Nivel 1",
-      instructor: "Luis Herrera",
-      image: "https://via.placeholder.com/300x200/BC4749/ffffff?text=Comprensión",
-      isNew: true,
-      category: "Comprensión",
+      image: "",
+      audioText: "Mejora tu comprensión de lo que lees",
+      color: "#BC4749",
     },
     {
       id: 5,
-      title: "Comunicación Efectiva",
-      instructor: "Patricia Silva",
-      image: "https://via.placeholder.com/300x200/6A994E/ffffff?text=Comunicación",
-      isNew: true,
-      category: "Comunicación",
+      image: "",
+      audioText: "Aprende a comunicarte mejor",
+      color: "#6A994E",
     },
-  ]
-
-  const latestCourses = [
     {
       id: 6,
-      title: "Alfabetización Digital Básica",
-      instructor: "Roberto Vega",
-      image: "https://via.placeholder.com/300x200/A7C957/ffffff?text=Digital",
-      isNew: true,
-      category: "Tecnología",
-    },
-    {
-      id: 7,
-      title: "Redacción de Documentos Personales",
-      instructor: "Elena Morales",
-      image: "https://via.placeholder.com/300x200/386641/ffffff?text=Redacción",
-      isNew: true,
-      category: "Escritura Práctica",
-    },
-    {
-      id: 8,
-      title: "Lectura de Noticias y Medios",
-      instructor: "Diego Ramírez",
-      image: "https://via.placeholder.com/300x200/BC4749/ffffff?text=Noticias",
-      isNew: true,
-      category: "Comprensión",
-    },
-    {
-      id: 9,
-      title: "Cálculo Mental y Operaciones",
-      instructor: "Carmen López",
-      image: "https://via.placeholder.com/300x200/6A994E/ffffff?text=Cálculo",
-      isNew: true,
-      category: "Matemáticas",
-    },
-    {
-      id: 10,
-      title: "Historia Personal: Mi Biografía",
-      instructor: "Andrés Castillo",
-      image: "https://via.placeholder.com/300x200/A7C957/ffffff?text=Historia",
-      isNew: true,
-      category: "Escritura Creativa",
+      image: "",
+      audioText: "Amplía tu vocabulario",
+      color: "#D4A017",
     },
   ]
 
+  const playAudio = (text, moduleId) => {
+    // Detener cualquier audio que esté reproduciéndose
+    Object.values(audioRefs.current).forEach((audio) => {
+      if (audio && !audio.paused) {
+        audio.pause()
+        audio.currentTime = 0
+      }
+    })
+
+    // Usar Web Speech API para reproducir el texto
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.lang = "es-ES"
+      utterance.rate = 0.8
+      utterance.pitch = 1
+      utterance.volume = 1
+
+      speechSynthesis.speak(utterance)
+    }
+  }
+
+  const stopAudio = () => {
+    if ("speechSynthesis" in window) {
+      speechSynthesis.cancel()
+    }
+  }
+
   return (
-   <>
-   
-   <ModuleCard Modules={recommendedCourses} ModulosRecientes={latestCourses}/>
-   
-   </>
+    <>
+      <NavBars />
+      <main className="main-content-visual">
+        <div className="modules-container-large">
+          <div className="modules-grid-large">
+            {modules.map((module, index) => (
+              <div
+                key={module.id}
+                className={`module-card-large ${index === 0 ? "module-featured" : ""}`}
+                onMouseEnter={() => playAudio(module.audioText, module.id)}
+                onMouseLeave={stopAudio}
+              >
+                <div className="module-image-large">
+                  <img
+                    src={module.image || "/placeholder.svg"}
+                    alt={`Módulo ${module.id}`}
+                    className="module-img-large"
+                    onError={(e) => {
+                      // Si la imagen no carga, usar placeholder con color
+                      e.target.src = `https://via.placeholder.com/600x400/${module.color.replace("#", "")}/ffffff?text=Módulo+${module.id}`
+                    }}
+                  />
+
+                  {/* Indicador de audio */}
+                  <div className="audio-indicator-large">
+                    <div className="audio-waves-large">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+
+                  {/* Overlay con efecto hover */}
+                  <div className="module-overlay"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    </>
   )
 }
