@@ -9,21 +9,9 @@ export const createModule = async(req, res) => {
             {
                 name,
                 description,
-                user,
                 img
             }
         )
-
-        const userExist = await User.findById(user)
-
-        if(!userExist){
-            return res.status(404).send(
-                {
-                    success: false,
-                    message: 'User not found'
-                }
-            )
-        }
 
         await addModule.save()
 
@@ -117,14 +105,13 @@ export const deleteModule = async(req, res) => {
 
 export const updateModule = async(req, res) => {
     try {
-        const { idModule, name, description, made, img } = req.body 
+        const { idModule, name, description, img } = req.body 
 
         const updatedModule = await Module.findByIdAndUpdate(
             idModule,
             {
                 name,
                 description,
-                made,
                 img
             },
             {
