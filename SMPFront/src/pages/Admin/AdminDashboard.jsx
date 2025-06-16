@@ -82,7 +82,7 @@ export const AdminDashboard = () => {
             <div className="panel-logo">
               <div className="panel-logo-icon">
                 <img
-                  src="/src/assets/LogoSolo.png"
+                  src="https://res.cloudinary.com/dxvwrech8/image/upload/v1750044062/Logo_evrmiv.png"
                   alt="Logo"
                   className="panel-logo-image"
                   onError={(e) => {
