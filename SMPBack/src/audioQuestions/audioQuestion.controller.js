@@ -30,8 +30,7 @@ export const createAudioQuestion = async(req, res) => {
                 answer3, 
                 img4, 
                 answer4, 
-                order, 
-                module
+                order
             }
         )
         
@@ -47,6 +46,13 @@ export const createAudioQuestion = async(req, res) => {
         }
 
         await addAudioQuestion.save()
+
+        moduleExist.resources.push({
+            refId: addAudioQuestion._id,
+            kind: 'AudioQuestion'
+        })
+
+        await moduleExist.save()
 
         return res.send(
             {
@@ -115,6 +121,26 @@ export const deleteAudioQuestion = async(req, res) => {
         }
 
         await AudioQuestion.findByIdAndDelete(idAudioQuestion)
+
+        const module = await Module.findOne({
+            resources: {
+                $elemMatch: {
+                    refId: audioQuestion._id,
+                    kind: 'AudioQuestion'
+                }
+            }
+        })
+
+        if (module) {
+            await Module.findByIdAndUpdate(module._id, {
+                $pull: {
+                    resources: {
+                        refId: audioQuestion._id,
+                        kind: 'AudioQuestion'
+                    }
+                }
+            })
+        }
 
         return res.send(
             {
