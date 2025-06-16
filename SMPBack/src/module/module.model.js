@@ -13,15 +13,6 @@ const moduleSchema = Schema(
             maxLength: [200, `Can´t be overcome 200 characters`],
             required: [true, 'Name is required']
         },
-        made: {
-            type: Boolean,
-            default: false
-        },
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: [true, 'User ID is required']
-        },
         imageQuestions: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ImageQuestion'
