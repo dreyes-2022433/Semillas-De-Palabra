@@ -1,9 +1,8 @@
 import Module from './module.model.js'
-import User from '../user/user.model.js'
 
 export const createModule = async(req, res) => {
     try {
-        const { name, description, user, img } = req.body
+        const { name, description, img } = req.body
         
         const addModule = new Module(
             {
