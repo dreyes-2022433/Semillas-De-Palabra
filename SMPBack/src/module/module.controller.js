@@ -14,6 +14,20 @@ export const createModule = async(req, res) => {
             }
         )
 
+        const existingModule = await Module.findOne(
+            {
+                name: name
+            }
+        )
+        if(existingModule){
+            return res.status(400).send(
+                {
+                    success: false,
+                    message: 'A module with this name already exists'
+                }
+            )
+        }
+
         const userExist = await User.findById(user)
 
         if(!userExist){

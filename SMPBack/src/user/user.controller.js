@@ -1,5 +1,6 @@
 import { checkPassword, encrypt} from '../../utils/encrypt.js'
 import User from '../user/user.model.js'
+import { generateJwt } from '../../utils/jwt.js'
 
 export const updateUser = async (req, res) => {
     const { idUser, name, surname, CUI } = req.body
@@ -89,46 +90,54 @@ export const deleteUser = async (req, res) => {
     const { id } = req.params // <- Ahora viene de la URL
     const adminUser = req.user
 
-    // Solo ADMIN puede eliminar usuarios
     if (adminUser.role !== 'ADMIN') {
-      return res.status(403).send({
-        success: false,
-        message: 'Only admins can delete users.'
-      })
+      return res.status(403).send(
+            {
+                success: false,
+                message: 'Only admins can delete users.'
+            }
+        )
     }
 
     const userToDelete = await User.findById(id)
 
     if (!userToDelete) {
-      return res.status(404).send({
-        success: false,
-        message: 'User not found'
-      })
+      return res.status(404).send(
+            {
+                success: false,
+                message: 'User not found'
+            }
+        )
     }
 
-    // Evita que un admin elimine a otro admin
     if (userToDelete.role === 'ADMIN' && adminUser.uid !== id) {
-      return res.status(403).send({
-        success: false,
-        message: 'You cannot delete another ADMIN.'
-      })
+      return res.status(403).send(
+            {
+                success: false,
+                message: 'You cannot delete another ADMIN.'
+            }
+        )
     }
 
     userToDelete.status = false
     await userToDelete.save()
 
-    return res.send({
-      success: true,
-      message: `Account ${userToDelete.name} deleted successfully`
-    })
+    return res.send(
+        {
+            success: true,
+            message: `Account ${userToDelete.name} deleted successfully`
+        }
+    )
 
   } catch (err) {
     console.error(err)
-    return res.status(500).send({
-      success: false,
-      message: 'General error when deleting user',
-      err
-    })
+    return res.status(500).send(
+        {
+            success: false,
+            message: 'General error when deleting user',
+            err
+        }
+    )
   }
 }
 
@@ -222,6 +231,167 @@ export const getAll = async(req, res)=>{
             {
                 success: false,
                 message: 'General Error',
+                err
+            }
+        )
+    }
+}
+
+export const getAllUsersByRole = async (req, res) => {
+    const { limit, skip } = req.query
+    const userRequesting = req.user
+
+    if (userRequesting.role !== 'ADMIN' && userRequesting.role !== 'HELPER') {
+        return res.status(403).send(
+            {
+                success: false,
+                message: 'Only ADMIN or HELPER can view users with role USER.'
+            }
+        )
+    }
+
+    try {
+        const users = await User.find(
+            { 
+                role: 'USER' 
+            }
+        )
+            .skip(skip)
+            .limit(limit)
+
+        if (users.length === 0) {
+            return res.send(
+                {
+                    success: false,
+                    message: 'Users with role "USER" not found :('
+                }
+            )
+        }
+
+        return res.send(
+            {
+                success: true,
+                message: 'Users with role USER found :)',
+                total: users.length,
+                users
+            }
+        )
+
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send(
+            {
+                success: false,
+                message: 'General Error',
+                err
+            }
+        )
+    }
+}
+
+export const getOneUser = async (req, res) => {
+    const userRequesting = req.user
+    const { id } = req.params
+
+
+    if (userRequesting.role !== 'ADMIN' && userRequesting.role !== 'HELPER') {
+        return res.status(403).send(
+            {
+                success: false,
+                message: 'Only ADMIN or HELPER can view a user.'
+            }
+        )
+    }
+
+    try {
+        const user = await User.findById(id)
+
+        if (!user) {
+            return res.status(404).send(
+                    {
+                    success: false,
+                    message: 'User not found.'
+                }
+            )
+        }
+
+        return res.send(
+            {
+                success: true,
+                message: 'User found :)',
+                user
+            }
+        )
+
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send(
+            {
+                success: false,
+                message: 'General Error',
+                err
+            }
+        )
+    }
+}
+
+export const loginAsUser = async (req, res) => {
+    const { id } = req.params
+    const userRequesting = req.user
+
+    if (userRequesting.role !== 'ADMIN' && userRequesting.role !== 'HELPER') {
+        return res.status(403).send(
+            {
+                success: false,
+                message: 'Only ADMIN or HELPER can login as another user.'
+            }
+        )
+    }
+
+    try {
+        const user = await User.findById(id)
+
+        if (!user) {
+            return res.status(404).send(
+                {
+                    success: false,
+                    message: 'User not found.'
+                }
+            )
+        }
+
+        if (user.status === false) {
+            return res.status(403).send(
+                {
+                    success: false,
+                    message: 'This user account is deactivated.'
+                }
+            )
+        }
+
+        const loggerUser = {
+            uid: user._id,
+            name: user.name,
+            role: user.role
+        }
+
+        const token = await generateJwt(loggerUser)
+
+        return res.send(
+            {
+                success: true,
+                message: `Now logged in as ${user.name} ${user.surname}`,
+                loggerUser,
+                token
+            }
+        )
+
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send(
+            {
+                success: false,
+                message: 'Error trying to login as user',
                 err
             }
         )
