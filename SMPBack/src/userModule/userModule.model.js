@@ -9,7 +9,7 @@ const userModuleSchema = Schema(
         },
         module: {
             type: mongoose.Schema.ObjectId,
-            ref: Module
+            ref: 'Module'
         },
         made: {
             type: Boolean,
