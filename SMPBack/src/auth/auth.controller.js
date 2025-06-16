@@ -1,6 +1,7 @@
 import User from '../user/user.model.js'
 import { checkPassword, encrypt} from '../../utils/encrypt.js'
 import { generateJwt } from '../../utils/jwt.js'
+import { moduleAssigment } from '../userModule/userModule.controller.js'
 
 export const initAdminUser = async(req, res) => {
     try {
@@ -64,6 +65,9 @@ export const register = async(req, res)=>{
         user.password = await encrypt(user.password)
         user.role = 'USER'
         await user.save()
+
+        await moduleAssigment(user._id)
+
         return res.send(
             {
                 message: `Registred successfully, Welcome ${user.name} can be logger with your CUI: ${user.CUI}`
