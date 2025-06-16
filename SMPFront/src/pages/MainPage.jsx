@@ -8,37 +8,37 @@ export default function MainPage() {
   const modules = [
     {
       id: 1,
-      image: "https://www.nestleprofessional-latam.com/sites/default/files/styles/np_hero_small_small/public/2022-10/Nescafe%CC%81_Espresso_2022ok%20%281%29.png?itok=Ux0Tk86r",
+      image: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
       audioText: "Aprende a leer palabras y frases básicas",
       color: "#6A994E",
     },
     {
       id: 2,
-      image: "src/assets/vocales.png",
+      image: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
       audioText: "Aprende a escribir letras y palabras",
       color: "#A7C957",
     },
     {
       id: 3,
-      image: "",
+      image: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
       audioText: "Aprende números y matemáticas básicas",
       color: "#386641",
     },
     {
       id: 4,
-      image: "",
+      image: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
       audioText: "Mejora tu comprensión de lo que lees",
       color: "#BC4749",
     },
     {
       id: 5,
-      image: "",
+      image: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
       audioText: "Aprende a comunicarte mejor",
       color: "#6A994E",
     },
     {
       id: 6,
-      image: "",
+      image: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
       audioText: "Amplía tu vocabulario",
       color: "#D4A017",
     },

@@ -1,10 +1,10 @@
-"use client"
+import React from "react"
 import { Search, Home, BookOpen, TrendingUp, Award, Bell, User } from "lucide-react"
 import { useState } from "react"
 
 export const NavBars = () => {
   const [activeSection, setActiveSection] = useState("inicio")
-  const logoUrl = "/src/assets/LogoSolo.png"
+  const logoUrl = "https://res.cloudinary.com/dxvwrech8/image/upload/v1750044062/Logo_evrmiv.png" 
 
   const sidebarItems = [
     { id: "inicio", label: "Inicio", icon: Home },
