@@ -75,9 +75,6 @@ export const validCreateModule = [
         .notEmpty()
         .isLength({max: 200})
         .withMessage('Description cannot be overcome 200 characters'),
-    body('user', 'User cannot be empty')
-        .notEmpty()
-        .custom(objectIdValid),
     validateErrorWithoutImg
 ]
 
@@ -92,8 +89,6 @@ export const validUpdateModule = [
         .optional()
         .isLength({max: 200})
         .withMessage('Description cannot be overcome 200 characters'),
-    body('made', 'Made is optional')
-        .optional(),
     body('img', 'IMG is optional')
         .optional(),
     validateErrorWithoutImg
