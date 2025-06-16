@@ -13,11 +13,6 @@ const videoLessonSchema = Schema(
         order: {
             type: Number,
             required: [true, 'Order is required']
-        },
-        module: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Module',
-            required: [true, 'Order is required']
         }
     }
 )
