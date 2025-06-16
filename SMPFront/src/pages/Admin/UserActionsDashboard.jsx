@@ -8,7 +8,7 @@ import {
   updateUserRequest,
   deleteUserRequest
 } from '../../services/api.js'
-import '../../styles/Mainpage.css'
+import './Styles/Admin.css'
 
 const MotionBox = motion.div
 

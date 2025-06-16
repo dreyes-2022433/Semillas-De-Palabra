@@ -9,7 +9,7 @@ import {
 } from '../../services/api'
 import { ArrowLeft, BookOpen, Trash2, Edit2, Save } from 'lucide-react'
 import toast from 'react-hot-toast'
-import '../../styles/Mainpage.css'
+import './Styles/Admin.css'
 
 const MotionBox = motion.div
 
