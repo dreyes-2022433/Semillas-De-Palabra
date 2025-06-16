@@ -37,11 +37,6 @@ const imageQuestionSchema = Schema(
         answer4:{
             type: Boolean
         },
-        module: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Module',
-            required: [true, 'Module is required']
-        },
         order: {
             type: Number,
             required: [true, 'Order is required']
