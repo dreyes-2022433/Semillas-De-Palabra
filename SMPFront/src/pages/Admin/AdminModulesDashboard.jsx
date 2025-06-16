@@ -9,7 +9,7 @@ import {
 } from '../../services/api'
 import { ArrowLeft, BookOpen, Trash2, Edit2, Save } from 'lucide-react'
 import toast from 'react-hot-toast'
-import '../../styles/Mainpage.css'
+import './Styles/Admin.css'
 
 const MotionBox = motion.div
 
@@ -93,9 +93,9 @@ export const AdminModulesDashboard = () => {
   )
 
   return (
-    <div className="main-page-container">
-      <header className="main-header">
-        <div className="header-content" style={{ justifyContent: 'space-between' }}>
+    <div className="panel-page">
+      <header className="panel-header">
+        <div className="panel-header-content" style={{ justifyContent: 'space-between' }}>
           <button
             onClick={() => navigate('/admin')}
             style={{
@@ -112,7 +112,6 @@ export const AdminModulesDashboard = () => {
               boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
               transition: 'all 0.2s ease-in-out'
             }}
-           
           >
             <ArrowLeft size={18} />
             Volver al Panel
@@ -120,9 +119,8 @@ export const AdminModulesDashboard = () => {
         </div>
       </header>
 
-      <div className="main-layout">
-        <div className="main-content">
-
+      <div className="panel-layout">
+        <div className="panel-content">
           <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
             <form
               onSubmit={handleFormSubmit}
@@ -191,21 +189,21 @@ export const AdminModulesDashboard = () => {
             </form>
 
             <div style={{ flex: '1 1 60%' }}>
-              <div className="search-section" style={{ marginBottom: '1.5rem' }}>
+              <div className="panel-search-section" style={{ marginBottom: '1.5rem' }}>
                 <input
                   placeholder="Buscar módulo..."
-                  className="search-input"
+                  className="panel-search-input"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
 
-              <div className="card-grid" style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: '1fr' }}>
+              <div className="panel-grid" style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: '1fr' }}>
                 {filteredModules.length > 0 ? (
                   filteredModules.map((mod) => (
                     <MotionBox
                       key={mod._id}
-                      className="dashboard-card"
+                      className="panel-dashboard-card"
                       style={{
                         backgroundColor: '#f6fddf',
                         fontFamily: 'Segoe UI, Roboto, sans-serif',
@@ -234,7 +232,7 @@ export const AdminModulesDashboard = () => {
                     </MotionBox>
                   ))
                 ) : (
-                  <p className="no-results">No se encontraron módulos.</p>
+                  <p className="panel-no-results">No se encontraron módulos.</p>
                 )}
               </div>
             </div>

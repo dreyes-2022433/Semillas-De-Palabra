@@ -1,6 +1,8 @@
 import React from "react"
 import { Search, Home, BookOpen, TrendingUp, Award, Bell, MessageCircle, User, ChevronRight } from 'lucide-react'
 
+
+
 export const ModuleCard = ({Modules,ModulosRecientes})=>{
 
 return (

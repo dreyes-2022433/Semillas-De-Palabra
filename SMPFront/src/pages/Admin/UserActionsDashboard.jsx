@@ -8,7 +8,7 @@ import {
   updateUserRequest,
   deleteUserRequest
 } from '../../services/api.js'
-import '../../styles/Mainpage.css'
+import './Styles/Admin.css'
 
 const MotionBox = motion.div
 
@@ -68,9 +68,9 @@ export const UserActionsDashboard = () => {
 
   if (selectedUser) {
     return (
-      <div className="main-page-container">
-        <header className="main-header">
-          <div className="header-content">
+      <div className="panel-page">
+        <header className="panel-header">
+          <div className="panel-header-content">
             <button
               onClick={() => setSelectedUser(null)}
               style={{
@@ -92,8 +92,8 @@ export const UserActionsDashboard = () => {
           </div>
         </header>
 
-        <div className="main-layout">
-          <div className="main-content" style={{ padding: '2rem' }}>
+        <div className="panel-layout">
+          <div className="panel-content" style={{ padding: '2rem' }}>
             <div style={{
               backgroundColor: '#f2e8cf',
               padding: '2.5rem',
@@ -123,23 +123,23 @@ export const UserActionsDashboard = () => {
   }
 
   return (
-    <div className="main-page-container">
-      <header className="main-header">
-        <div className="header-content">
-          <div className="header-left">
-            <div className="logo-section">
-              <div className="logo-icon">
+    <div className="panel-page">
+      <header className="panel-header">
+        <div className="panel-header-content">
+          <div className="panel-header-left">
+            <div className="panel-logo">
+              <div className="panel-logo-icon">
                 <Users size={24} />
               </div>
-              <span className="logo-text">Usuarios</span>
+              <span className="panel-logo-text">Usuarios</span>
             </div>
-            <div className="search-section">
-              <div className="search-icon">
+            <div className="panel-search">
+              <div className="panel-search-icon">
                 <Search size={16} />
               </div>
               <input
                 placeholder="Buscar usuario..."
-                className="search-input"
+                className="panel-search-input"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -148,8 +148,8 @@ export const UserActionsDashboard = () => {
         </div>
       </header>
 
-      <div className="main-layout">
-        <div className="main-content">
+      <div className="panel-layout">
+        <div className="panel-content">
           <div style={{ marginBottom: '1.5rem' }}>
             <button
               onClick={() => navigate('/admin')}
@@ -169,15 +169,15 @@ export const UserActionsDashboard = () => {
               <ArrowLeft size={18} /> Volver al Panel
             </button>
           </div>
-          <h1 className="dashboard-title" style={{ fontFamily: 'Segoe UI, Roboto, sans-serif', fontWeight: '600' }}>
+          <h1 className="panel-section-title" style={{ fontFamily: 'Segoe UI, Roboto, sans-serif', fontWeight: '600' }}>
             Administrar Usuarios
           </h1>
-          <div className="card-grid" style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: '1fr' }}>
+          <div className="panel-grid" style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: '1fr' }}>
             {filteredUsers.length > 0 ? (
               filteredUsers.map((user) => (
                 <MotionBox
                   key={user._id}
-                  className="dashboard-card"
+                  className="panel-dashboard-card"
                   style={{
                     backgroundColor: '#A7D7A7',
                     fontFamily: 'Segoe UI, Roboto, sans-serif',
