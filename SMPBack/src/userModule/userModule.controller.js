@@ -14,6 +14,40 @@ export const moduleAssigment = async(userId) => {
         await UserModule.insertMany(userModuleAssignments)
     } catch (err) { 
         console.error(err)
+    }
+}
+
+export const updateLessonStatus = async(req, res) => {
+    try {
+        const { idUserModule } = req.body
+
+        const updateExistUserModule = await UserModule.findByIdAndUpdate(
+            idUserModule,
+            {
+                made: true
+            },
+            {
+                new: true
+            }
+        )
+
+        if(!updateExistUserModule){
+            return res.status(404).send(
+                {
+                    success: false,
+                    message: 'User module not found'
+                }
+            )
+        }
+
+        return res.send(
+            {
+                success: true,
+                message: 'Status lesson updated successfully'
+            }
+        )
+    } catch (err) {
+        console.error(err)
         return res.status(500).send(
             {
                 success: false,
