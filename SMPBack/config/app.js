@@ -12,7 +12,7 @@ import imageQuestionRoutes from '../src/imageQuestions/imageQuestion.routes.js'
 import videoLessonRoutes from '../src/videoLessons/videoLesson.routes.js'
 import userModuleRoutes from '../src/userModule/userModule.routes.js'
 import { limiter } from '../middlewares/rate.limit.js'
-
+import 'dotenv/config'
 export const config = (app)=>{
     app.use(express.json())
     app.use(express.urlencoded({extended: true}))

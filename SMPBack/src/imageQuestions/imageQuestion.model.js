@@ -37,10 +37,6 @@ const imageQuestionSchema = Schema(
         answer4:{
             type: Boolean
         },
-        order: {
-            type: Number,
-            required: [true, 'Order is required']
-        }
     }
 )
 
