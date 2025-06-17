@@ -39,10 +39,6 @@ export const useLogin = () => {
       localStorage.setItem('user', JSON.stringify(loggerUser))
       localStorage.setItem('uid', loggerUser.uid)
 
-      console.log('🔐 TOKEN:', token)
-console.log('📦 USUARIO:', loggerUser)
-console.log('🔍 Payload del token:', JSON.parse(atob(token.split('.')[1])))
-
 
       toast.success(`Bienvenido ${loggerUser.name} ${loggerUser.surname}`)
 
