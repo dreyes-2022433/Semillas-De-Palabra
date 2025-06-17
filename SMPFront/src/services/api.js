@@ -64,6 +64,21 @@ export const getAllUsersRequest = async (limit = 10, skip = 0) => {
   }
 }
 
+
+export const imageQuestionRequest = async (imageData) => {
+  try {
+    const token = localStorage.getItem('token')
+    return await api.post('localhost:3678/v1/imageQuestion/uploadImageQuestion',imageData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  } catch (error) {
+    return { error: true, error }
+  }
+}
+
 export const createModuleRequest = async (moduleData) => {
   try {
     const token = localStorage.getItem('token')
