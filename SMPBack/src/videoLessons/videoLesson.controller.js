@@ -27,6 +27,13 @@ export const createVideoLesson = async(req, res) => {
 
         await addVideoLesson.save()
 
+        moduleExist.resources.push({
+            refId: addVideoLesson._id,
+            kind: 'VideoLesson'
+        })
+
+        await moduleExist.save()
+
         return res.send(
             {
                 success: true,
@@ -94,6 +101,26 @@ export const deleteVideoLesson = async(req, res) => {
         }
 
         await VideoLesson.findByIdAndDelete(idVideoLesson)
+
+        const module = await Module.findOne({
+            resources: {
+                $elemMatch: {
+                    refId: videoLesson._id,
+                    kind: 'VideoLesson'
+                }
+            }
+        })
+
+        if (module) {
+            await Module.findByIdAndUpdate(module._id, {
+                $pull: {
+                    resources: {
+                        refId: videoLesson._id,
+                        kind: 'VideoLesson'
+                    }
+                }
+            })
+        }
 
         return res.send(
             {

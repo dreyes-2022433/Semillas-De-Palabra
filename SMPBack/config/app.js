@@ -10,6 +10,7 @@ import userRoutes from '../src/user/user.routes.js'
 import audioQuestionRoutes from '../src/audioQuestions/audioQuestion.routes.js'
 import imageQuestionRoutes from '../src/imageQuestions/imageQuestion.routes.js'
 import videoLessonRoutes from '../src/videoLessons/videoLesson.routes.js'
+import userModuleRoutes from '../src/userModule/userModule.routes.js'
 import { limiter } from '../middlewares/rate.limit.js'
 
 export const config = (app)=>{
@@ -29,6 +30,7 @@ export const routes = (app)=>{
     app.use('/v1/audioQuestion', audioQuestionRoutes)
     app.use('/v1/imageQuestion', imageQuestionRoutes)
     app.use('/v1/videoLesson', videoLessonRoutes)
+    app.use('/v1/userModule', userModuleRoutes)
 }
 
 
