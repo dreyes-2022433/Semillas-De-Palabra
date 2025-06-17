@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import { useLogin } from '../../shared/useLogin.jsx'
-import logo from '../../assets/logo.png'
+
 
 const MotionBox = motion(Box)
 const MotionText = motion(Text)
@@ -96,7 +96,7 @@ export const Login = ({ handleIsLogin }) => {
           transition={{ duration: 0.8, ease: 'easeOut' }}
         >
           <Image
-            src={logo}
+            src='https://res.cloudinary.com/dxvwrech8/image/upload/v1750136553/LOGO_SEMILLA_DE_PALABRA-05_cgd7rh.png'
             alt="Logo"
             boxSize={{ base: '140px', md: '220px' }}
             objectFit="contain"
