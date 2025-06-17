@@ -1,5 +1,6 @@
 import UserModule from './userModule.model.js'
 import Module from '../module/module.model.js'
+import User from '../user/user.model.js'
 
 export const moduleAssigment = async(userId) => {
     try {
@@ -55,5 +56,22 @@ export const updateLessonStatus = async(req, res) => {
                 err
             }
         )
+    }
+}
+
+export const assignNewModule = async(idModule) => {
+    try {
+
+        const users = await User.find()
+
+        const assignments = users.map(user => ({
+            user: user._id,
+            module: idModule
+        }))
+
+        await UserModule.insertMany(assignments)
+
+    } catch (err) {
+        console.error(err)
     }
 }
