@@ -10,6 +10,7 @@ import {
 import { ArrowLeft, BookOpen, Trash2, Edit2, Save } from 'lucide-react'
 import toast from 'react-hot-toast'
 import './Styles/Admin.css'
+import { ModuleContent } from '../../components/Modules/ModuleContent'
 
 const MotionBox = motion.div
 
@@ -17,8 +18,9 @@ export const AdminModulesDashboard = () => {
   const navigate = useNavigate()
   const [modules, setModules] = useState([])
   const [search, setSearch] = useState('')
-  const [form, setForm] = useState({ name: '', description: '', id: null })
+  const [form, setForm] = useState({ name: '', description: '' })
   const [isEditing, setIsEditing] = useState(false)
+  
 
   useEffect(() => {
     fetchModules()
@@ -30,6 +32,7 @@ export const AdminModulesDashboard = () => {
       setModules(res.data.modules || [])
     }
   }
+  
 
   const handleInputChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -56,8 +59,7 @@ export const AdminModulesDashboard = () => {
     } else {
       const res = await createModuleRequest({
         name: form.name,
-        description: form.description,
-        user: user.uid
+        description: form.description
       })
       if (!res.error && res.data.success) {
         toast.success('Módulo creado')
@@ -66,13 +68,13 @@ export const AdminModulesDashboard = () => {
       }
     }
 
-    setForm({ name: '', description: '', id: null })
+    setForm({ name: '', description: ''})
     setIsEditing(false)
     fetchModules()
   }
 
   const handleEdit = (mod) => {
-    setForm({ name: mod.name, description: mod.description, id: mod._id })
+    setForm({ name: mod.name, description: mod.description})
     setIsEditing(true)
   }
 
@@ -226,10 +228,12 @@ export const AdminModulesDashboard = () => {
                         </button>
                         <button onClick={() => handleDelete(mod._id)} title="Eliminar módulo">
                           <Trash2 size={20} />
-                        </button>
-                        <BookOpen size={20} title="Ver módulo" />
+                        </button  >
+                        
+                          <ModuleContent moduleId={mod._id}/>
+                    
                       </div>
-                    </MotionBox>
+                    </MotionBox >
                   ))
                 ) : (
                   <p className="panel-no-results">No se encontraron módulos.</p>
