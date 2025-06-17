@@ -1,3 +1,4 @@
+import { assignNewModule } from '../userModule/userModule.controller.js'
 import Module from './module.model.js'
 
 export const createModule = async(req, res) => {
@@ -13,6 +14,8 @@ export const createModule = async(req, res) => {
         )
 
         await addModule.save()
+
+        assignNewModule(addModule._id)
 
         return res.send(
             {
