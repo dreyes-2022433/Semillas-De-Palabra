@@ -1,6 +1,10 @@
 import UserModule from './userModule.model.js'
 import Module from '../module/module.model.js'
 import User from '../user/user.model.js'
+import mongoose from 'mongoose'
+import AudioQuestion from '../audioQuestions/audioQuestion.model.js'
+import ImageQuestion from '../imageQuestions/imageQuestion.model.js'
+import VideoLesson from '../videoLessons/videoLesson.model.js'
 
 export const moduleAssigment = async(userId) => {
     try {
@@ -107,6 +111,79 @@ export const getUserModules = async(req, res) => {
                 userModules
             }
         )
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send(
+            {
+                success: false,
+                message: 'General error',
+                err
+            }
+        )
+    }
+}
+
+export const getQuestionsByUserModule = async(req, res) => {
+    try {
+        const { idUserModule } = req.body
+
+        const userModule = await UserModule.findById(idUserModule)
+
+        if (!userModule) {
+            return res.status(404).send(
+                {
+                    success: false,
+                    message: 'UserModule not found'
+                }
+            )
+        }
+
+        const module = await Module.findById(userModule.module)
+
+        if (!module || !module.resources || module.resources.length === 0) {
+            return res.status(404).send( 
+                {
+                    success: false,
+                    message: 'No resources found in the associated module'
+                }
+            )
+        }
+
+        const populatedResources = await Promise.all(
+            module.resources.map(async ({ kind, refId }) => {
+                let Model
+
+                switch (kind) {
+                case 'AudioQuestion':
+                    Model = AudioQuestion
+                    break
+                case 'ImageQuestion':
+                    Model = ImageQuestion
+                    break
+                case 'VideoLesson':
+                    Model = VideoLesson
+                    break
+                default:
+                    return null
+                }
+
+                const data = await Model.findById(refId)
+                if (!data) return null
+
+                return { kind, data }
+            })
+        )
+
+        const filtered = populatedResources.filter(Boolean)
+
+        return res.send(
+            {
+            success: true,
+            message: 'Resources retrieved successfully',
+            resources: filtered
+            }
+        )
+
     } catch (err) {
         console.error(err)
         return res.status(500).send(
