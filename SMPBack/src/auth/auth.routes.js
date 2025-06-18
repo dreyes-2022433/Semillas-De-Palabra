@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { 
     register, 
-    login 
+    login
 } from './auth.controller.js'
 
 import { 
@@ -25,5 +25,5 @@ api.post(
     ], 
     login
 )
- 
+
 export default api
