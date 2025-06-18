@@ -7,9 +7,10 @@ import { useEffect } from "react"
 export default function MainPage() {
   const audioRefs = useRef({})
   const [userModules, setUserModules] = useState([])
- 
+  const [contador, setContador] = useState(-1)
+
   const fetchUserModules = async () => {
-    
+  
   const res = await getUserModulesRequest()
     setUserModules(res.data.userModules || [])
   }

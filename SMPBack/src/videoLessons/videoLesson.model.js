@@ -12,7 +12,7 @@ const videoLessonSchema = Schema(
         },
         order: {
             type: Number,
-            required: [true, 'Order is required']
+            
         }
     }
 )
