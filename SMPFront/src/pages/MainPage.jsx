@@ -1,49 +1,22 @@
 import { useRef } from "react"
 import { NavBars } from "../components/MainPage/NavBars"
 import './MainPages/MainPage.css'
-
+import { getUserModulesRequest } from "../services/api"
+import { useState } from "react"
+import { useEffect } from "react"
 export default function MainPage() {
   const audioRefs = useRef({})
-
-  // Módulos con rutas a tus propias imágenes
-  const modules = [
-    {
-      id: 1,
-      image: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
-      audioText: "Aprende a leer palabras y frases básicas",
-      color: "#6A994E",
-    },
-    {
-      id: 2,
-      image: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
-      audioText: "Aprende a escribir letras y palabras",
-      color: "#A7C957",
-    },
-    {
-      id: 3,
-      image: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
-      audioText: "Aprende números y matemáticas básicas",
-      color: "#386641",
-    },
-    {
-      id: 4,
-      image: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
-      audioText: "Mejora tu comprensión de lo que lees",
-      color: "#BC4749",
-    },
-    {
-      id: 5,
-      image: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
-      audioText: "Aprende a comunicarte mejor",
-      color: "#6A994E",
-    },
-    {
-      id: 6,
-      image: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
-      audioText: "Amplía tu vocabulario",
-      color: "#D4A017",
-    },
-  ]
+  const [userModules, setUserModules] = useState([])
+ 
+  const fetchUserModules = async () => {
+    
+  const res = await getUserModulesRequest()
+    setUserModules(res.data.userModules || [])
+  }
+  useEffect(() => {
+  fetchUserModules()
+  }, [])
+  console.log(userModules)
 
   const playAudio = (text, moduleId) => {
     // Detener cualquier audio que esté reproduciéndose
@@ -78,21 +51,21 @@ export default function MainPage() {
       <main className="main-content-visual">
         <div className="modules-container-large">
           <div className="modules-grid-large">
-            {modules.map((module, index) => (
+            {userModules.map((module, index) => (
               <div
-                key={module.id}
+                key={module._id}
                 className={`module-card-large ${index === 0 ? "module-featured" : ""}`}
-                onMouseEnter={() => playAudio(module.audioText, module.id)}
+                onMouseEnter={() => playAudio(module.module.name, module._id)}
                 onMouseLeave={stopAudio}
               >
                 <div className="module-image-large">
                   <img
-                    src={module.image || "/placeholder.svg"}
+                    src={module.module.img || "/placeholder.svg"}
                     alt={`Módulo ${module.id}`}
                     className="module-img-large"
                     onError={(e) => {
                       // Si la imagen no carga, usar placeholder con color
-                      e.target.src = `https://via.placeholder.com/600x400/${module.color.replace("#", "")}/ffffff?text=Módulo+${module.id}`
+                      
                     }}
                   />
 
