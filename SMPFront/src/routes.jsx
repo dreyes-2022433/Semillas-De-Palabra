@@ -1,3 +1,4 @@
+
 import { AuthPage } from "./pages/Auth/AuthPage.jsx"
 import { NotFound } from "./pages/Alerts/NotFound.jsx"
 import MainPage from "./pages/MainPage.jsx"
@@ -16,3 +17,4 @@ export const routes = [
   { path: "/modulesPage", element: <AdminModulesDashboard /> },
   { path: "/*", element: <NotFound /> },
 ]
+

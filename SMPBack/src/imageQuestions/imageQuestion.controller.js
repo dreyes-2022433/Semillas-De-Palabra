@@ -50,6 +50,13 @@ export const createImageQuestion = async(req, res) => {
 
         await addImageQuestion.save()
 
+        moduleExist.resources.push({
+            refId: addImageQuestion._id,
+            kind: 'ImageQuestion'
+        })
+
+        await moduleExist.save()
+
         return res.send(
             {
                 success: true,
@@ -117,6 +124,26 @@ export const deleteImageQuestion = async(req, res) => {
         }
 
         await ImageQuestion.findByIdAndDelete(idImageQuestion)
+
+        const module = await Module.findOne({
+            resources: {
+                $elemMatch: {
+                    refId: imageQuestion._id,
+                    kind: 'ImageQuestion'
+                }
+            }
+        })
+
+        if (module) {
+            await Module.findByIdAndUpdate(module._id, {
+                $pull: {
+                    resources: {
+                        refId: imageQuestion._id,
+                        kind: 'ImageQuestion'
+                    }
+                }
+            })
+        }
 
         return res.send(
             {

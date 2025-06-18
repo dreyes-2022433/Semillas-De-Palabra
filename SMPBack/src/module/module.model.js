@@ -28,7 +28,8 @@ const moduleSchema = Schema(
         },
         resources: [resourceSchema],
         img: {
-            type: String
+            type: String,
+            default: 'https://res.cloudinary.com/dxvwrech8/image/upload/v1750207122/default-featured-image.png_hxp1hz.jpg'
         }
     }
 )

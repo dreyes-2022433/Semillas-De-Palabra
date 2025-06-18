@@ -11,11 +11,9 @@ export const useLogin = () => {
   const login = async (userLoggin, password) => {
     setIsLoading(true)
     
-    // Creamos el objeto para la solicitud
     const user = { userLoggin, password }
     
     try {
-      // Realizamos la solicitud de login
       const response = await loginRequest(user)
 
       setIsLoading(false)
@@ -34,21 +32,17 @@ export const useLogin = () => {
       setError(false)
       const { token, loggerUser } = response.data
 
-      // Guardamos los datos en el localStorage
       localStorage.setItem('token', token)
       localStorage.setItem('user', JSON.stringify(loggerUser))
       localStorage.setItem('uid', loggerUser.uid)
 
-      console.log('🔐 TOKEN:', token)
-console.log('📦 USUARIO:', loggerUser)
-console.log('🔍 Payload del token:', JSON.parse(atob(token.split('.')[1])))
-
 
       toast.success(`Bienvenido ${loggerUser.name} ${loggerUser.surname}`)
 
-      // Redirigir según el rol
       if (loggerUser.role === 'ADMIN') {
         navigate('/admin')
+      } else if (loggerUser.role === 'HELPER') {
+        navigate('/helper')
       } else {
         navigate('/main')
       }

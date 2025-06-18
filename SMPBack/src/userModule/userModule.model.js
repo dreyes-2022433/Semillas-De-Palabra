@@ -7,10 +7,10 @@ const userModuleSchema = Schema(
             ref: 'User',
             required: [true, 'User ID is required']
         },
-        module: [{
+        module: {
             type: mongoose.Schema.ObjectId,
-            ref: Module
-        }],
+            ref: 'Module'
+        },
         made: {
             type: Boolean,
             default: false
