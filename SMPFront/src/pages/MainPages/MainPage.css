@@ -247,21 +247,21 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
-  align-items: flex-start; /* Cambiar de center a flex-start */
+  align-items: flex-start; 
   justify-content: center;
   padding: 3rem 2rem; /* Aumentar padding superior */
 }
 
 .modules-container-large {
   width: 100%;
-  min-height: calc(100vh - 73px - 6rem); /* Altura mínima para permitir scroll */
+  min-height: calc(100vh - 73px - 6rem); 
   display: flex;
-  align-items: flex-start; /* Cambiar de center a flex-start */
+  align-items: flex-start; 
   justify-content: center;
-  padding-bottom: 3rem; /* Agregar padding inferior */
+  padding-bottom: 3rem; 
 }
 
-/* Grid de módulos GRANDES - AHORA MÁS ALTO */
+/* Grid de módulos GRANDES*/
 .modules-grid-large {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -272,14 +272,13 @@ body {
   align-content: center;
 }
 
-/* Tarjetas de módulos GRANDES - MÁS ALTAS */
+/* Tarjetas de módulos GRANDES*/
 .module-card-large {
   cursor: pointer;
   transition: all 0.4s ease;
   border-radius: 1.5rem;
   overflow: hidden;
   position: relative;
-  /* Aumentamos la altura mínima para mejor visualización */
   min-height: 320px;
   height: 320px;
 }
