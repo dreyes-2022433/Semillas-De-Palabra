@@ -267,12 +267,7 @@ export const LessonNavBars = ({ currentLesson, onLessonSelect, moduleId }) => {
               </div>
               <span className="lesson-unique-logo-text">Semillas de Palabras</span>
             </div>
-            <div className="lesson-unique-search-section">
-              <div className="lesson-unique-search-icon">
-                <Search size={16} />
-              </div>
-              <input placeholder="¿Qué quieres aprender?" className="lesson-unique-search-input" />
-            </div>
+
           </div>
           <div className="lesson-unique-header-right">
             <button className="lesson-unique-header-button">

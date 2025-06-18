@@ -1,10 +1,18 @@
-import { useState } from "react"
+"use client"
+
+import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { LessonNavBars } from "../../components/LessonPage/LessonNavBars"
+import { lessonService } from "../../services/lessonService"
 import "./LessonPage.css"
 
 export default function LessonPage() {
   const { moduleId } = useParams()
+
+  // Estados para manejar datos del backend
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [backendData, setBackendData] = useState(null)
 
   // Datos completos de los 6 módulos con 5 lecciones cada uno
   const getLessonsByModule = (moduleId) => {
@@ -241,12 +249,563 @@ export default function LessonPage() {
     return lessonsByModule[moduleId] || lessonsByModule[1]
   }
 
-  const lessons = getLessonsByModule(Number.parseInt(moduleId))
+  // Función para obtener ejercicios del backend o usar mock
+  const getExercisesByModule = (moduleId, lessonId) => {
+    // Si tenemos datos del backend, usarlos
+    if (backendData && backendData.exercises && backendData.exercises.length > 0) {
+      console.log("🎯 Usando ejercicios del backend")
+      return backendData.exercises
+    }
+
+    // Si no, usar datos mock
+    console.log("🎯 Usando ejercicios mock")
+    const exercisesByModule = {
+      // MÓDULO 1: Vocales
+      1: [
+        // Pregunta 1: Imagen → Audio
+        {
+          id: 1,
+          type: "image-question-audio-answers",
+          question: "Observa la imagen y selecciona el sonido correcto.",
+          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+          text: "¿Qué vocal representa esta imagen?",
+          options: [
+            { id: "a", text: "Sonido E", audioText: "E, E, E, vocal E" },
+            { id: "b", text: "Sonido A", audioText: "A, A, A, vocal A" },
+            { id: "c", text: "Sonido I", audioText: "I, I, I, vocal I" },
+          ],
+          correctAnswer: "b",
+        },
+        // Pregunta 2: Audio → Imagen
+        {
+          id: 2,
+          type: "audio-question-image-answers",
+          question: "Escucha el sonido y selecciona la imagen correcta.",
+          audioText: "A, A, A, vocal A. Escucha bien el sonido de la vocal A",
+          text: "¿Cuál imagen corresponde al sonido que escuchaste?",
+          options: [
+            {
+              id: "a",
+              text: "Elefante",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "b",
+              text: "Avión",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "c",
+              text: "Oso",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+          ],
+          correctAnswer: "b",
+        },
+        // Pregunta 3: Imagen → Audio
+        {
+          id: 3,
+          type: "image-question-audio-answers",
+          question: "Mira la imagen y elige el sonido que corresponde.",
+          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+          text: "¿Qué sonido hace esta vocal?",
+          options: [
+            { id: "a", text: "Sonido A", audioText: "A, A, A, vocal A" },
+            { id: "b", text: "Sonido E", audioText: "E, E, E, vocal E" },
+            { id: "c", text: "Sonido I", audioText: "I, I, I, vocal I" },
+          ],
+          correctAnswer: "b",
+        },
+        // Pregunta 4: Audio → Imagen
+        {
+          id: 4,
+          type: "audio-question-image-answers",
+          question: "Escucha y selecciona la vocal correcta.",
+          audioText: "I, I, I, vocal I. Escucha bien el sonido de la vocal I",
+          text: "¿Qué vocal escuchaste?",
+          options: [
+            {
+              id: "a",
+              text: "Vocal A",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "b",
+              text: "Vocal E",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "c",
+              text: "Vocal I",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+          ],
+          correctAnswer: "c",
+        },
+      ],
+      // MÓDULO 2: Consonantes y Sílabas
+      2: [
+        {
+          id: 1,
+          type: "audio-question-image-answers",
+          question: "Escucha la sílaba y selecciona la imagen correcta.",
+          audioText: "MA, MA, MA, sílaba MA. Escucha bien la sílaba MA",
+          text: "¿Cuál imagen representa la sílaba que escuchaste?",
+          options: [
+            {
+              id: "a",
+              text: "MA",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "b",
+              text: "ME",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "c",
+              text: "PA",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 2,
+          type: "image-question-audio-answers",
+          question: "Observa la sílaba y selecciona el sonido correcto.",
+          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+          text: "¿Cómo suena esta sílaba?",
+          options: [
+            { id: "a", text: "Sonido MA", audioText: "MA, MA, MA, sílaba MA" },
+            { id: "b", text: "Sonido ME", audioText: "ME, ME, ME, sílaba ME" },
+            { id: "c", text: "Sonido MI", audioText: "MI, MI, MI, sílaba MI" },
+          ],
+          correctAnswer: "b",
+        },
+        {
+          id: 3,
+          type: "audio-question-image-answers",
+          question: "Escucha y selecciona la palabra correcta.",
+          audioText: "MAMÁ, MAMÁ, MAMÁ. Escucha bien la palabra MAMÁ",
+          text: "¿Qué palabra escuchaste?",
+          options: [
+            {
+              id: "a",
+              text: "MAMÁ",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "b",
+              text: "PAPÁ",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "c",
+              text: "SALA",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 4,
+          type: "image-question-audio-answers",
+          question: "Mira la palabra y elige cómo suena.",
+          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+          text: "¿Cómo se pronuncia esta palabra?",
+          options: [
+            { id: "a", text: "MAMÁ", audioText: "MAMÁ, MAMÁ, palabra MAMÁ" },
+            { id: "b", text: "PAPÁ", audioText: "PAPÁ, PAPÁ, palabra PAPÁ" },
+            { id: "c", text: "SALA", audioText: "SALA, SALA, palabra SALA" },
+          ],
+          correctAnswer: "b",
+        },
+      ],
+      // MÓDULO 3: Palabras de dos sílabas
+      3: [
+        {
+          id: 1,
+          type: "image-question-audio-answers",
+          question: "Observa la palabra y selecciona cómo suena.",
+          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+          text: "¿Cómo se pronuncia esta palabra?",
+          options: [
+            { id: "a", text: "MAPA", audioText: "MAPA, MAPA, palabra MAPA" },
+            { id: "b", text: "MESA", audioText: "MESA, MESA, palabra MESA" },
+            { id: "c", text: "MASA", audioText: "MASA, MASA, palabra MASA" },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 2,
+          type: "audio-question-image-answers",
+          question: "Escucha la palabra y selecciona la imagen.",
+          audioText: "PATO, PATO, PATO. Escucha bien la palabra PATO",
+          text: "¿Qué palabra escuchaste?",
+          options: [
+            {
+              id: "a",
+              text: "PATO",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "b",
+              text: "GATO",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "c",
+              text: "RATO",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 3,
+          type: "image-question-audio-answers",
+          question: "Mira la imagen y elige el sonido correcto.",
+          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+          text: "¿Cómo suena esta palabra?",
+          options: [
+            { id: "a", text: "SAPO", audioText: "SAPO, SAPO, palabra SAPO" },
+            { id: "b", text: "SOPA", audioText: "SOPA, SOPA, palabra SOPA" },
+            { id: "c", text: "SALA", audioText: "SALA, SALA, palabra SALA" },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 4,
+          type: "audio-question-image-answers",
+          question: "Escucha y selecciona la palabra correcta.",
+          audioText: "LATA, LATA, LATA. Escucha bien la palabra LATA",
+          text: "¿Qué palabra escuchaste?",
+          options: [
+            {
+              id: "a",
+              text: "LATA",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "b",
+              text: "RATA",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "c",
+              text: "MATA",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+          ],
+          correctAnswer: "a",
+        },
+      ],
+      // MÓDULO 4: Vocabulario básico
+      4: [
+        {
+          id: 1,
+          type: "audio-question-image-answers",
+          question: "Escucha la palabra de familia y selecciona la imagen.",
+          audioText: "MAMÁ, MAMÁ, MAMÁ. La palabra es MAMÁ",
+          text: "¿Qué miembro de la familia escuchaste?",
+          options: [
+            {
+              id: "a",
+              text: "MAMÁ",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "b",
+              text: "PAPÁ",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "c",
+              text: "HERMANO",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 2,
+          type: "image-question-audio-answers",
+          question: "Observa la comida y selecciona cómo suena.",
+          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+          text: "¿Cómo se pronuncia esta comida?",
+          options: [
+            { id: "a", text: "PAN", audioText: "PAN, PAN, la palabra es PAN" },
+            { id: "b", text: "LECHE", audioText: "LECHE, LECHE, la palabra es LECHE" },
+            { id: "c", text: "FRUTA", audioText: "FRUTA, FRUTA, la palabra es FRUTA" },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 3,
+          type: "audio-question-image-answers",
+          question: "Escucha el animal y selecciona la imagen.",
+          audioText: "PERRO, PERRO, PERRO. El animal es PERRO",
+          text: "¿Qué animal escuchaste?",
+          options: [
+            {
+              id: "a",
+              text: "PERRO",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "b",
+              text: "GATO",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "c",
+              text: "VACA",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 4,
+          type: "image-question-audio-answers",
+          question: "Mira el color y elige cómo suena.",
+          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+          text: "¿Cómo se pronuncia este color?",
+          options: [
+            { id: "a", text: "ROJO", audioText: "ROJO, ROJO, el color es ROJO" },
+            { id: "b", text: "AZUL", audioText: "AZUL, AZUL, el color es AZUL" },
+            { id: "c", text: "VERDE", audioText: "VERDE, VERDE, el color es VERDE" },
+          ],
+          correctAnswer: "a",
+        },
+      ],
+      // MÓDULO 5: Artículos y frases
+      5: [
+        {
+          id: 1,
+          type: "image-question-audio-answers",
+          question: "Observa la frase y selecciona cómo suena.",
+          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+          text: "¿Cómo se lee esta frase?",
+          options: [
+            { id: "a", text: "EL PERRO", audioText: "EL PERRO, EL PERRO, la frase es EL PERRO" },
+            { id: "b", text: "LA CASA", audioText: "LA CASA, LA CASA, la frase es LA CASA" },
+            { id: "c", text: "EL GATO", audioText: "EL GATO, EL GATO, la frase es EL GATO" },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 2,
+          type: "audio-question-image-answers",
+          question: "Escucha la frase y selecciona la imagen.",
+          audioText: "LA CASA, LA CASA, LA CASA. La frase es LA CASA",
+          text: "¿Qué frase escuchaste?",
+          options: [
+            {
+              id: "a",
+              text: "LA CASA",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "b",
+              text: "EL PERRO",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "c",
+              text: "LA MESA",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 3,
+          type: "image-question-audio-answers",
+          question: "Mira la frase plural y elige cómo suena.",
+          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+          text: "¿Cómo se pronuncia esta frase?",
+          options: [
+            { id: "a", text: "LOS PERROS", audioText: "LOS PERROS, LOS PERROS, la frase es LOS PERROS" },
+            { id: "b", text: "LAS CASAS", audioText: "LAS CASAS, LAS CASAS, la frase es LAS CASAS" },
+            { id: "c", text: "LOS GATOS", audioText: "LOS GATOS, LOS GATOS, la frase es LOS GATOS" },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 4,
+          type: "audio-question-image-answers",
+          question: "Escucha la frase completa y selecciona la imagen.",
+          audioText: "EL PERRO CORRE, EL PERRO CORRE. La frase completa es EL PERRO CORRE",
+          text: "¿Qué frase completa escuchaste?",
+          options: [
+            {
+              id: "a",
+              text: "EL PERRO CORRE",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "b",
+              text: "LA NIÑA COME",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "c",
+              text: "EL GATO DUERME",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+          ],
+          correctAnswer: "a",
+        },
+      ],
+      // MÓDULO 6: Comprensión de relatos
+      6: [
+        {
+          id: 1,
+          type: "audio-question-image-answers",
+          question: "Escucha la frase y selecciona la imagen.",
+          audioText: "EL GATO JUEGA, EL GATO JUEGA. La frase es EL GATO JUEGA",
+          text: "¿Qué acción escuchaste?",
+          options: [
+            {
+              id: "a",
+              text: "EL GATO JUEGA",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "b",
+              text: "EL GATO DUERME",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "c",
+              text: "EL GATO COME",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 2,
+          type: "image-question-audio-answers",
+          question: "Observa la acción y selecciona cómo suena.",
+          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+          text: "¿Cómo se lee esta frase?",
+          options: [
+            { id: "a", text: "EL GATO JUEGA", audioText: "EL GATO JUEGA, EL GATO JUEGA" },
+            { id: "b", text: "EL GATO DUERME", audioText: "EL GATO DUERME, EL GATO DUERME" },
+            { id: "c", text: "EL GATO COME", audioText: "EL GATO COME, EL GATO COME" },
+          ],
+          correctAnswer: "b",
+        },
+        {
+          id: 3,
+          type: "audio-question-image-answers",
+          question: "Escucha el relato corto y selecciona la imagen.",
+          audioText: "EL GATO JUEGA CON LA PELOTA. EL GATO DUERME EN LA SILLA. Este es el relato completo",
+          text: "¿Qué relato escuchaste?",
+          options: [
+            {
+              id: "a",
+              text: "GATO Y PELOTA",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "b",
+              text: "NIÑA Y PAN",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+            {
+              id: "c",
+              text: "PERRO Y HUESO",
+              imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+            },
+          ],
+          correctAnswer: "a",
+        },
+        {
+          id: 4,
+          type: "image-question-audio-answers",
+          question: "Mira el relato y elige cómo suena.",
+          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
+          text: "¿Cómo se lee este relato?",
+          options: [
+            { id: "a", text: "LA NIÑA COME PAN", audioText: "LA NIÑA COME PAN. LA NIÑA BEBE LECHE" },
+            { id: "b", text: "EL NIÑO JUEGA", audioText: "EL NIÑO JUEGA. EL NIÑO CORRE" },
+            { id: "c", text: "LA MAMÁ COCINA", audioText: "LA MAMÁ COCINA. LA MAMÁ LIMPIA" },
+          ],
+          correctAnswer: "a",
+        },
+      ],
+    }
+
+    return exercisesByModule[moduleId] || exercisesByModule[1]
+  }
+
+  // Cargar datos del backend al montar el componente
+  useEffect(() => {
+    const loadBackendData = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        // Por ahora usamos un idUserModule mock - esto debería venir del contexto/estado global
+        const mockIdUserModule = `user_module_${moduleId}_${Date.now()}`
+
+        console.log("🔄 Intentando cargar datos del backend para módulo:", moduleId)
+        console.log("🔄 ID UserModule mock:", mockIdUserModule)
+
+        // Intentar cargar datos del backend
+        const response = await lessonService.getQuestionsByUserModule(mockIdUserModule)
+        console.log("✅ Respuesta del backend:", response)
+
+        if (response.success && response.resources && response.resources.length > 0) {
+          const processedResources = lessonService.processResources(response.resources)
+          console.log("✅ Recursos procesados:", processedResources)
+
+          // Crear ejercicios combinando preguntas de audio e imagen
+          const combinedExercises = lessonService.createExercisesFromResources(
+            processedResources.audioQuestions,
+            processedResources.imageQuestions,
+          )
+
+          // Guardar datos del backend
+          setBackendData({
+            exercises: combinedExercises,
+            lessons: processedResources.videoLessons,
+          })
+
+          console.log("✅ Datos del backend cargados exitosamente")
+        } else {
+
+        }
+      } catch (backendError) {
+        console.warn("⚠️ Error del backend, usando datos mock:", backendError.message)
+        setError(`Backend no disponible: ${backendError.message}`)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadBackendData()
+  }, [moduleId])
+
+  // Obtener lecciones (usar backend si está disponible, si no usar mock)
+  const lessons =
+    backendData && backendData.lessons && backendData.lessons.length > 0
+      ? backendData.lessons
+      : getLessonsByModule(Number.parseInt(moduleId))
+
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0)
   const [activeTab, setActiveTab] = useState("leccion")
   const [currentExercise, setCurrentExercise] = useState(1)
   const [selectedAnswer, setSelectedAnswer] = useState(null)
   const [audio, setAudio] = useState(null)
+  const [showResult, setShowResult] = useState(false)
+  const [isCorrect, setIsCorrect] = useState(false)
+  const [score, setScore] = useState(0)
+  const [answeredQuestions, setAnsweredQuestions] = useState(new Set())
 
   const currentLesson = lessons[currentLessonIndex]
 
@@ -283,350 +842,7 @@ export default function LessonPage() {
     playAudio(fullText)
   }
 
-  // Ejercicios completos para todos los módulos - 4 preguntas cada uno (2 de cada formato)
-  // USANDO RUTAS LOCALES DE ASSETS
-  const getExercisesByModule = (moduleId, lessonId) => {
-    const exercisesByModule = {
-      // MÓDULO 1: Vocales
-      1: [
-        // Pregunta 1: Imagen → Audio
-        {
-          id: 1,
-          type: "image-question-audio-answers",
-          question: "Observa la imagen y selecciona el sonido correcto.",
-          imageUrl: "src/assets/voca.png", // Usando tu imagen local
-          text: "¿Qué vocal representa esta imagen?",
-          options: [
-            { id: "a", text: "Sonido E", audioText: "E, E, E, vocal E" },
-            { id: "b", text: "Sonido A", audioText: "A, A, A, vocal A" },
-            { id: "c", text: "Sonido I", audioText: "I, I, I, vocal I" },
-          ],
-          correctAnswer: "b",
-        },
-        // Pregunta 2: Audio → Imagen
-        {
-          id: 2,
-          type: "audio-question-image-answers",
-          question: "Escucha el sonido y selecciona la imagen correcta.",
-          audioText: "A, A, A, vocal A. Escucha bien el sonido de la vocal A",
-          text: "¿Cuál imagen corresponde al sonido que escuchaste?",
-          options: [
-            { id: "a", text: "Elefante", imageUrl: "src/assets/voca.png" },
-            { id: "b", text: "Avión", imageUrl: "src/assets/voca.png" },
-            { id: "c", text: "Oso", imageUrl: "src/assets/voca.png" },
-          ],
-          correctAnswer: "b",
-        },
-        // Pregunta 3: Imagen → Audio
-        {
-          id: 3,
-          type: "image-question-audio-answers",
-          question: "Mira la imagen y elige el sonido que corresponde.",
-          imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg",
-          text: "¿Qué sonido hace esta vocal?",
-          options: [
-            { id: "a", text: "Sonido A", audioText: "A, A, A, vocal A" },
-            { id: "b", text: "Sonido E", audioText: "E, E, E, vocal E" },
-            { id: "c", text: "Sonido I", audioText: "I, I, I, vocal I" },
-          ],
-          correctAnswer: "b",
-        },
-        // Pregunta 4: Audio → Imagen
-        {
-          id: 4,
-          type: "audio-question-image-answers",
-          question: "Escucha y selecciona la vocal correcta.",
-          audioText: "I, I, I, vocal I. Escucha bien el sonido de la vocal I",
-          text: "¿Qué vocal escuchaste?",
-          options: [
-            { id: "a", text: "Vocal A", imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg" },
-            { id: "b", text: "Vocal E", imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg" },
-            { id: "c", text: "Vocal I", imageUrl: "https://res.cloudinary.com/dxvwrech8/image/upload/v1747956080/cld-sample-4.jpg" },
-          ],
-          correctAnswer: "c",
-        },
-      ],
-      // MÓDULO 2: Consonantes y Sílabas
-      2: [
-        {
-          id: 1,
-          type: "audio-question-image-answers",
-          question: "Escucha la sílaba y selecciona la imagen correcta.",
-          audioText: "MA, MA, MA, sílaba MA. Escucha bien la sílaba MA",
-          text: "¿Cuál imagen representa la sílaba que escuchaste?",
-          options: [
-            { id: "a", text: "MA", imageUrl: "src/assets/voca.png" },
-            { id: "b", text: "ME", imageUrl: "src/assets/voca.png" },
-            { id: "c", text: "PA", imageUrl: "src/assets/voca.png" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 2,
-          type: "image-question-audio-answers",
-          question: "Observa la sílaba y selecciona el sonido correcto.",
-          imageUrl: "src/assets/voca.png",
-          text: "¿Cómo suena esta sílaba?",
-          options: [
-            { id: "a", text: "Sonido MA", audioText: "MA, MA, MA, sílaba MA" },
-            { id: "b", text: "Sonido ME", audioText: "ME, ME, ME, sílaba ME" },
-            { id: "c", text: "Sonido MI", audioText: "MI, MI, MI, sílaba MI" },
-          ],
-          correctAnswer: "b",
-        },
-        {
-          id: 3,
-          type: "audio-question-image-answers",
-          question: "Escucha y selecciona la palabra correcta.",
-          audioText: "MAMÁ, MAMÁ, MAMÁ. Escucha bien la palabra MAMÁ",
-          text: "¿Qué palabra escuchaste?",
-          options: [
-            { id: "a", text: "MAMÁ", imageUrl: "src/assets/voca.png" },
-            { id: "b", text: "PAPÁ", imageUrl: "src/assets/voca.png" },
-            { id: "c", text: "SALA", imageUrl: "src/assets/voca.png" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 4,
-          type: "image-question-audio-answers",
-          question: "Mira la palabra y elige cómo suena.",
-          imageUrl: "src/assets/voca.png",
-          text: "¿Cómo se pronuncia esta palabra?",
-          options: [
-            { id: "a", text: "MAMÁ", audioText: "MAMÁ, MAMÁ, palabra MAMÁ" },
-            { id: "b", text: "PAPÁ", audioText: "PAPÁ, PAPÁ, palabra PAPÁ" },
-            { id: "c", text: "SALA", audioText: "SALA, SALA, palabra SALA" },
-          ],
-          correctAnswer: "b",
-        },
-      ],
-      // MÓDULO 3: Palabras de dos sílabas
-      3: [
-        {
-          id: 1,
-          type: "image-question-audio-answers",
-          question: "Observa la palabra y selecciona cómo suena.",
-          imageUrl: "src/assets/voca.png",
-          text: "¿Cómo se pronuncia esta palabra?",
-          options: [
-            { id: "a", text: "MAPA", audioText: "MAPA, MAPA, palabra MAPA" },
-            { id: "b", text: "MESA", audioText: "MESA, MESA, palabra MESA" },
-            { id: "c", text: "MASA", audioText: "MASA, MASA, palabra MASA" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 2,
-          type: "audio-question-image-answers",
-          question: "Escucha la palabra y selecciona la imagen.",
-          audioText: "PATO, PATO, PATO. Escucha bien la palabra PATO",
-          text: "¿Qué palabra escuchaste?",
-          options: [
-            { id: "a", text: "PATO", imageUrl: "src/assets/voca.png" },
-            { id: "b", text: "GATO", imageUrl: "src/assets/voca.png" },
-            { id: "c", text: "RATO", imageUrl: "src/assets/voca.png" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 3,
-          type: "image-question-audio-answers",
-          question: "Mira la imagen y elige el sonido correcto.",
-          imageUrl: "src/assets/voca.png",
-          text: "¿Cómo suena esta palabra?",
-          options: [
-            { id: "a", text: "SAPO", audioText: "SAPO, SAPO, palabra SAPO" },
-            { id: "b", text: "SOPA", audioText: "SOPA, SOPA, palabra SOPA" },
-            { id: "c", text: "SALA", audioText: "SALA, SALA, palabra SALA" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 4,
-          type: "audio-question-image-answers",
-          question: "Escucha y selecciona la palabra correcta.",
-          audioText: "LATA, LATA, LATA. Escucha bien la palabra LATA",
-          text: "¿Qué palabra escuchaste?",
-          options: [
-            { id: "a", text: "LATA", imageUrl: "src/assets/voca.png" },
-            { id: "b", text: "RATA", imageUrl: "src/assets/voca.png" },
-            { id: "c", text: "MATA", imageUrl: "src/assets/voca.png" },
-          ],
-          correctAnswer: "a",
-        },
-      ],
-      // MÓDULO 4: Vocabulario básico
-      4: [
-        {
-          id: 1,
-          type: "audio-question-image-answers",
-          question: "Escucha la palabra de familia y selecciona la imagen.",
-          audioText: "MAMÁ, MAMÁ, MAMÁ. La palabra es MAMÁ",
-          text: "¿Qué miembro de la familia escuchaste?",
-          options: [
-            { id: "a", text: "MAMÁ", imageUrl: "src/assets/voca.png" },
-            { id: "b", text: "PAPÁ", imageUrl: "src/assets/voca.png" },
-            { id: "c", text: "HERMANO", imageUrl: "src/assets/voca.png" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 2,
-          type: "image-question-audio-answers",
-          question: "Observa la comida y selecciona cómo suena.",
-          imageUrl: "src/assets/voca.png",
-          text: "¿Cómo se pronuncia esta comida?",
-          options: [
-            { id: "a", text: "PAN", audioText: "PAN, PAN, la palabra es PAN" },
-            { id: "b", text: "LECHE", audioText: "LECHE, LECHE, la palabra es LECHE" },
-            { id: "c", text: "FRUTA", audioText: "FRUTA, FRUTA, la palabra es FRUTA" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 3,
-          type: "audio-question-image-answers",
-          question: "Escucha el animal y selecciona la imagen.",
-          audioText: "PERRO, PERRO, PERRO. El animal es PERRO",
-          text: "¿Qué animal escuchaste?",
-          options: [
-            { id: "a", text: "PERRO", imageUrl: "src/assets/voca.png" },
-            { id: "b", text: "GATO", imageUrl: "src/assets/voca.png" },
-            { id: "c", text: "VACA", imageUrl: "src/assets/voca.png" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 4,
-          type: "image-question-audio-answers",
-          question: "Mira el color y elige cómo suena.",
-          imageUrl: "src/assets/voca.png",
-          text: "¿Cómo se pronuncia este color?",
-          options: [
-            { id: "a", text: "ROJO", audioText: "ROJO, ROJO, el color es ROJO" },
-            { id: "b", text: "AZUL", audioText: "AZUL, AZUL, el color es AZUL" },
-            { id: "c", text: "VERDE", audioText: "VERDE, VERDE, el color es VERDE" },
-          ],
-          correctAnswer: "a",
-        },
-      ],
-      // MÓDULO 5: Artículos y frases
-      5: [
-        {
-          id: 1,
-          type: "image-question-audio-answers",
-          question: "Observa la frase y selecciona cómo suena.",
-          imageUrl: "src/assets/voca.png",
-          text: "¿Cómo se lee esta frase?",
-          options: [
-            { id: "a", text: "EL PERRO", audioText: "EL PERRO, EL PERRO, la frase es EL PERRO" },
-            { id: "b", text: "LA CASA", audioText: "LA CASA, LA CASA, la frase es LA CASA" },
-            { id: "c", text: "EL GATO", audioText: "EL GATO, EL GATO, la frase es EL GATO" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 2,
-          type: "audio-question-image-answers",
-          question: "Escucha la frase y selecciona la imagen.",
-          audioText: "LA CASA, LA CASA, LA CASA. La frase es LA CASA",
-          text: "¿Qué frase escuchaste?",
-          options: [
-            { id: "a", text: "LA CASA", imageUrl: "src/assets/voca.png" },
-            { id: "b", text: "EL PERRO", imageUrl: "src/assets/voca.png" },
-            { id: "c", text: "LA MESA", imageUrl: "src/assets/voca.png" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 3,
-          type: "image-question-audio-answers",
-          question: "Mira la frase plural y elige cómo suena.",
-          imageUrl: "src/assets/voca.png",
-          text: "¿Cómo se pronuncia esta frase?",
-          options: [
-            { id: "a", text: "LOS PERROS", audioText: "LOS PERROS, LOS PERROS, la frase es LOS PERROS" },
-            { id: "b", text: "LAS CASAS", audioText: "LAS CASAS, LAS CASAS, la frase es LAS CASAS" },
-            { id: "c", text: "LOS GATOS", audioText: "LOS GATOS, LOS GATOS, la frase es LOS GATOS" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 4,
-          type: "audio-question-image-answers",
-          question: "Escucha la frase completa y selecciona la imagen.",
-          audioText: "EL PERRO CORRE, EL PERRO CORRE. La frase completa es EL PERRO CORRE",
-          text: "¿Qué frase completa escuchaste?",
-          options: [
-            { id: "a", text: "EL PERRO CORRE", imageUrl: "src/assets/voca.png" },
-            { id: "b", text: "LA NIÑA COME", imageUrl: "src/assets/voca.png" },
-            { id: "c", text: "EL GATO DUERME", imageUrl: "src/assets/voca.png" },
-          ],
-          correctAnswer: "a",
-        },
-      ],
-      // MÓDULO 6: Comprensión de relatos
-      6: [
-        {
-          id: 1,
-          type: "audio-question-image-answers",
-          question: "Escucha la frase y selecciona la imagen.",
-          audioText: "EL GATO JUEGA, EL GATO JUEGA. La frase es EL GATO JUEGA",
-          text: "¿Qué acción escuchaste?",
-          options: [
-            { id: "a", text: "EL GATO JUEGA", imageUrl: "src/assets/voca.png" },
-            { id: "b", text: "EL GATO DUERME", imageUrl: "src/assets/voca.png" },
-            { id: "c", text: "EL GATO COME", imageUrl: "src/assets/voca.png" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 2,
-          type: "image-question-audio-answers",
-          question: "Observa la acción y selecciona cómo suena.",
-          imageUrl: "src/assets/voca.png",
-          text: "¿Cómo se lee esta frase?",
-          options: [
-            { id: "a", text: "EL GATO JUEGA", audioText: "EL GATO JUEGA, EL GATO JUEGA" },
-            { id: "b", text: "EL GATO DUERME", audioText: "EL GATO DUERME, EL GATO DUERME" },
-            { id: "c", text: "EL GATO COME", audioText: "EL GATO COME, EL GATO COME" },
-          ],
-          correctAnswer: "b",
-        },
-        {
-          id: 3,
-          type: "audio-question-image-answers",
-          question: "Escucha el relato corto y selecciona la imagen.",
-          audioText: "EL GATO JUEGA CON LA PELOTA. EL GATO DUERME EN LA SILLA. Este es el relato completo",
-          text: "¿Qué relato escuchaste?",
-          options: [
-            { id: "a", text: "GATO Y PELOTA", imageUrl: "src/assets/voca.png" },
-            { id: "b", text: "NIÑA Y PAN", imageUrl: "src/assets/voca.png" },
-            { id: "c", text: "PERRO Y HUESO", imageUrl: "src/assets/voca.png" },
-          ],
-          correctAnswer: "a",
-        },
-        {
-          id: 4,
-          type: "image-question-audio-answers",
-          question: "Mira el relato y elige cómo suena.",
-          imageUrl: "src/assets/voca.png",
-          text: "¿Cómo se lee este relato?",
-          options: [
-            { id: "a", text: "LA NIÑA COME PAN", audioText: "LA NIÑA COME PAN. LA NIÑA BEBE LECHE" },
-            { id: "b", text: "EL NIÑO JUEGA", audioText: "EL NIÑO JUEGA. EL NIÑO CORRE" },
-            { id: "c", text: "LA MAMÁ COCINA", audioText: "LA MAMÁ COCINA. LA MAMÁ LIMPIA" },
-          ],
-          correctAnswer: "a",
-        },
-      ],
-    }
-
-    return exercisesByModule[moduleId] || exercisesByModule[1]
-  }
-
-  const exercises = getExercisesByModule(Number.parseInt(moduleId), currentLesson.id)
+  const exercises = getExercisesByModule(Number.parseInt(moduleId), currentLesson?.id)
 
   const handleLessonSelect = (lesson) => {
     const lessonIndex = lessons.findIndex((l) => l.id === lesson.id)
@@ -636,6 +852,9 @@ export default function LessonPage() {
       setCurrentExercise(1)
       setSelectedAnswer(null)
       stopAudio() // Detener audio al cambiar lección
+      setShowResult(false)
+      setScore(0)
+      setAnsweredQuestions(new Set())
     }
   }
 
@@ -651,12 +870,39 @@ export default function LessonPage() {
 
   const handleAnswerSelect = (answerId) => {
     setSelectedAnswer(answerId)
+    setShowResult(false) // Reset result when selecting new answer
+  }
+
+  const handleSubmitAnswer = () => {
+    if (!selectedAnswer) return
+
+    const currentQuestion = exercises[currentExercise - 1]
+    const correct = selectedAnswer === currentQuestion.correctAnswer
+
+    setIsCorrect(correct)
+    setShowResult(true)
+
+    // Update score if this question hasn't been answered correctly before
+    const questionKey = `${moduleId}-${currentExercise}`
+    if (correct && !answeredQuestions.has(questionKey)) {
+      setScore(score + 1)
+      setAnsweredQuestions((prev) => new Set([...prev, questionKey]))
+    }
+
+    // Play audio feedback
+    if (correct) {
+      playAudio("¡Excelente! Respuesta correcta. Muy bien hecho.")
+    } else {
+      const correctOption = currentQuestion.options.find((opt) => opt.id === currentQuestion.correctAnswer)
+      playAudio(`Respuesta incorrecta. La respuesta correcta es: ${correctOption.text}`)
+    }
   }
 
   const handleNextExercise = () => {
     if (currentExercise < exercises.length) {
       setCurrentExercise(currentExercise + 1)
       setSelectedAnswer(null)
+      setShowResult(false) // Reset result state
       stopAudio() // Detener audio al cambiar ejercicio
     }
   }
@@ -665,8 +911,21 @@ export default function LessonPage() {
     if (currentExercise > 1) {
       setCurrentExercise(currentExercise - 1)
       setSelectedAnswer(null)
+      setShowResult(false) // Reset result state
       stopAudio() // Detener audio al cambiar ejercicio
     }
+  }
+
+  // Mostrar loading si está cargando
+  if (loading) {
+    return (
+      <div className="lesson-page-unique-wrapper">
+        <div className="lesson-unique-loading">
+          <h2>🔄 Cargando datos del módulo...</h2>
+          <p>Conectando con el backend...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -678,6 +937,14 @@ export default function LessonPage() {
       />
       <main className="lesson-unique-main-content">
         <div className="lesson-unique-content-area">
+          {/* Indicador de fuente de datos */}
+          {backendData && <div className="lesson-unique-backend-indicator">✅ Datos cargados desde el backend</div>}
+          {error && (
+            <div className="lesson-unique-backend-indicator" style={{ backgroundColor: "#ffeb3b", color: "#f57c00" }}>
+              ⚠️ Usando datos mock: {error}
+            </div>
+          )}
+
           <div className="lesson-unique-content-tabs">
             <button
               className={`lesson-unique-tab-button ${activeTab === "leccion" ? "active" : ""}`}
@@ -703,7 +970,7 @@ export default function LessonPage() {
           {activeTab === "leccion" && (
             <div className="lesson-unique-content">
               <div className="lesson-unique-video-container">
-                {currentLesson.videoUrl ? (
+                {currentLesson?.videoUrl ? (
                   <iframe
                     src={currentLesson.videoUrl}
                     title="Video de la lección"
@@ -722,7 +989,7 @@ export default function LessonPage() {
             </div>
           )}
 
-          {activeTab === "ejercicio" && (
+          {activeTab === "ejercicio" && exercises && exercises.length > 0 && (
             <div className="lesson-unique-exercise-content">
               <div className="lesson-unique-exercise-header">
                 <div className="lesson-unique-exercise-navigation">
@@ -859,9 +1126,42 @@ export default function LessonPage() {
                     ))}
                   </div>
 
-                  <button className="lesson-unique-submit-button" disabled={!selectedAnswer}>
-                    Calificar
-                  </button>
+                  <div className="lesson-unique-submit-section">
+                    <button
+                      className="lesson-unique-submit-button"
+                      disabled={!selectedAnswer || showResult}
+                      onClick={handleSubmitAnswer}
+                    >
+                      {showResult ? "Calificado" : "Calificar"}
+                    </button>
+
+                    {showResult && (
+                      <div className={`lesson-unique-result ${isCorrect ? "correct" : "incorrect"}`}>
+                        <div className="lesson-unique-result-icon">{isCorrect ? "✅" : "❌"}</div>
+                        <div className="lesson-unique-result-text">
+                          <strong>{isCorrect ? "¡Correcto!" : "Incorrecto"}</strong>
+                          <p>
+                            {isCorrect
+                              ? "¡Excelente trabajo! Continúa así."
+                              : `La respuesta correcta es: ${exercises[currentExercise - 1].options.find((opt) => opt.id === exercises[currentExercise - 1].correctAnswer)?.text}`}
+                          </p>
+                        </div>
+                        {currentExercise < exercises.length && (
+                          <button className="lesson-unique-next-question-button" onClick={handleNextExercise}>
+                            Siguiente pregunta →
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Score display */}
+                  <div className="lesson-unique-score-display">
+                    <span>
+                      📊 Puntuación: {score}/{exercises.length}
+                    </span>
+                    <span>📈 Progreso: {Math.round((score / exercises.length) * 100)}%</span>
+                  </div>
                 </div>
               </div>
             </div>
