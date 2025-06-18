@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getUserModules } from '../../../SMPBack/src/userModule/userModule.controller'
 
 const api = axios.create({
   baseURL: 'http://localhost:3678',
@@ -44,6 +45,19 @@ export const deleteUserRequest = async (id) => {
     return await api.delete(`/v1/user/deleteUser/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`
+      }
+    })
+  } catch (error) {
+    return { error: true, error }
+  }
+}
+
+export const getUserModulesRequest = async () => {
+  try {
+    const token = localStorage.getItem('token')
+    return await api.get('/v1/userModule/getUserModules', {
+      headers: {
+        Authorization: `Bearer ${String(token)}`
       }
     })
   } catch (error) {
