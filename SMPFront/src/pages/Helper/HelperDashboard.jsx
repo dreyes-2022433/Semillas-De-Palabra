@@ -15,14 +15,14 @@ const MotionBox = motion.div
 const helperCards = [
   {
     id: 'view-tasks',
-    label: 'Ver Tareas',
+    label: 'Usuarios',
     icon: List,
-    path: '/tasksPage',
+    path: '/loginHelper',
     color: '#4E944F',
   },
   {
     id: 'add-task',
-    label: 'Agregar Tarea',
+    label: 'Administrar Usuario por Rol',
     icon: PlusCircle,
     path: '/addTaskPage',
     color: '#82CD47',

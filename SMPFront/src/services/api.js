@@ -140,3 +140,45 @@ export const updateModuleRequest = async (moduleData) => {
     return { error: true, error }
   }
 }
+
+export const getAllUsersByRole = async () => {
+  try {
+    const token = localStorage.getItem('token')
+    const response = await api.get('/v1/user/getAllUsersByRol', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    return response.data
+  } catch (error) {
+    return { error: true, message: 'Error al obtener los usuarios.' }
+  }
+}
+
+export const getOneUser = async (id) => {
+  try {
+    const token = localStorage.getItem('token')
+    const response = await api.get(`/v1/user/getOneUser/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    return response.data
+  } catch (error) {
+    return { error: true, error }
+  }
+}
+
+export const loginAsUser = async (id) => {
+  try {
+    const token = localStorage.getItem('token')
+    const response = await api.get(`/v1/user/loginAs/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    return response.data
+  } catch (error) {
+    return { error: true, error }
+  }
+}
