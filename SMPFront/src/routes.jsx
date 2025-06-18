@@ -8,6 +8,7 @@ import { UserActionsDashboard } from './pages/Admin/UserActionsDashboard.jsx'
 import { AdminModulesDashboard } from './pages/Admin/AdminModulesDashboard.jsx'
 import { HelperDashboard } from './pages/Helper/HelperDashboard.jsx'
 import { LoginUserByHelper } from './pages/Helper/LoginUserByHelper.jsx'
+import { LoginUserByAdmin } from './pages/Admin/LoginUserByAdmin.jsx'
 import { path } from 'framer-motion/client'
 
 export const routes = [
@@ -19,6 +20,7 @@ export const routes = [
   { path: '/usersPage', element: <UserActionsDashboard /> },
   { path: '/helper', element: <HelperDashboard />},
   { path: '/loginHelper', element: <LoginUserByHelper />},
+  { path: '/loginAdmin', element: <LoginUserByAdmin />},
   { path: '/modulesPage', element: <AdminModulesDashboard />},
   { path: '/*', element: <NotFound /> },
 ];

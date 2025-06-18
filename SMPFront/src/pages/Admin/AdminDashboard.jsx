@@ -30,9 +30,9 @@ const adminCards = [
   },
   {
     id: 'get-users',
-    label: 'Obtener Todos los Usuarios',
+    label: 'Entrar a la cuenta de los usuarios',
     icon: List,
-    path: '/users/all',
+    path: '/loginAdmin',
     color: '#B4D59A',
   },
 ]
@@ -41,6 +41,7 @@ export const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard')
   const [isAdmin, setIsAdmin] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [userName, setUserName] = useState('') 
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -56,6 +57,7 @@ export const AdminDashboard = () => {
       } else {
         navigate('/')
       }
+      setUserName(user.name || 'Usuario') 
     } catch (err) {
       console.error('Usuario malformado en localStorage')
       navigate('/')
@@ -116,7 +118,7 @@ export const AdminDashboard = () => {
               <div className="panel-avatar">
                 <User size={16} />
               </div>
-              <span>Admin</span>
+              <span>{userName}</span> 
             </div>
           </div>
         </div>

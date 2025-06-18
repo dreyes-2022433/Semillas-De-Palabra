@@ -15,17 +15,10 @@ const MotionBox = motion.div
 const helperCards = [
   {
     id: 'view-tasks',
-    label: 'Usuarios',
+    label: 'Entrar a la cuenta de los usuarios',
     icon: List,
     path: '/loginHelper',
     color: '#4E944F',
-  },
-  {
-    id: 'add-task',
-    label: 'Administrar Usuario por Rol',
-    icon: PlusCircle,
-    path: '/addTaskPage',
-    color: '#82CD47',
   },
 ]
 
@@ -33,6 +26,7 @@ export const HelperDashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard')
   const [isHelper, setIsHelper] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [userName, setUserName] = useState('') 
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -48,6 +42,7 @@ export const HelperDashboard = () => {
       } else {
         navigate('/')
       }
+      setUserName(user.name || 'Usuario') 
     } catch (err) {
       console.error('Usuario malformado en localStorage')
       navigate('/')
@@ -108,7 +103,7 @@ export const HelperDashboard = () => {
               <div className="panel-avatar">
                 <User size={16} />
               </div>
-              <span>Helper</span>
+              <span>{userName}</span>
             </div>
           </div>
         </div>
