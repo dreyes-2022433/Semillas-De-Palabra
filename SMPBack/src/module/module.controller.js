@@ -1,6 +1,6 @@
 import { assignNewModule } from '../userModule/userModule.controller.js'
 import Module from './module.model.js'
-
+import User from '../user/user.model.js'
 export const createModule = async(req, res) => {
     try {
         const { name, description, img } = req.body
@@ -12,6 +12,20 @@ export const createModule = async(req, res) => {
                 img
             }
         )
+
+        const existingModule = await Module.findOne(
+            {
+                name: name
+            }
+        )
+        if(existingModule){
+            return res.status(400).send(
+                {
+                    success: false,
+                    message: 'A module with this name already exists'
+                }
+            )
+        }
 
         await addModule.save()
 

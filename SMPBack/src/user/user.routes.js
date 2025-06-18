@@ -3,7 +3,10 @@ import {
     deleteUser, 
     updateUser, 
     updatePassword, 
-    getAll 
+    getAll, 
+    getAllUsersByRole,
+    getOneUser,
+    loginAsUser
 } from './user.controller.js'
 
 import { 
@@ -55,4 +58,28 @@ api.put(
     updatePassword
 )
 
+api.get(
+    '/getAllUsersByRol', 
+    [
+        validateJwt,
+    ],
+    getAllUsersByRole
+)
+
+api.get(
+    '/getOneUser/:id', 
+    [
+        validateJwt,
+    ],
+    getOneUser
+)
+
+api.get(
+    '/loginAs/:id', 
+    [
+        validateJwt
+    ],
+    loginAsUser
+)
+ 
 export default api
