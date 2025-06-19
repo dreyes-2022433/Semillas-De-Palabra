@@ -1,6 +1,9 @@
 import { assignNewModule } from '../userModule/userModule.controller.js'
 import Module from './module.model.js'
 import User from '../user/user.model.js'
+import ImageQuestion from '../imageQuestions/imageQuestion.model.js';
+import VideoLesson  from '../videoLessons/videoLesson.model.js';
+
 export const createModule = async(req, res) => {
     try {
         const { name, description, img } = req.body
@@ -49,6 +52,51 @@ export const createModule = async(req, res) => {
         )
     }
 }
+
+export const getModule = async (req, res) => {
+    try {
+        const idModule = req.body.idModule;
+        const module = await Module.findById(idModule).lean();
+
+        if (!module) {
+            return res.status(404).send({
+                success: false,
+                message: 'Module not found'
+            });
+        }
+
+        // Poblar los resources con los datos completos
+        const populatedResources = await Promise.all(
+            module.resources.map(async (resource) => {
+                if (resource.kind === 'ImageQuestion') {
+                    const image = await ImageQuestion.findById(resource.refId).lean();
+                    return { ...resource, data: image };
+                }
+                if (resource.kind === 'VideoLesson') {
+                    const video = await VideoLesson.findById(resource.refId).lean();
+                    return { ...resource, data: video };
+                }
+                return resource;
+            })
+        );
+
+        module.resources = populatedResources;
+
+        return res.send({
+            success: true,
+            message: 'Module found',
+            module: [module]
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send({
+            success: false,
+            message: 'General error',
+            err
+        });
+    }
+}
+
 
 export const getModules = async(req, res) => {
     try {
