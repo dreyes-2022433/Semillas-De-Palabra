@@ -1,0 +1,26 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.centered-container {
+  min-height: 100vh;
+  min-width: 100vw;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: #f8f9fa;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.centered-content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0;
+  padding: 2em 2em 4em 2em;
+}
