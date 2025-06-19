@@ -47,7 +47,7 @@ export const AdminDashboard = () => {
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
     if (!storedUser) {
-      navigate('/')
+      navigate('/Login')
       return
     }
     try {
@@ -60,14 +60,14 @@ export const AdminDashboard = () => {
       setUserName(user.name || 'Usuario') 
     } catch (err) {
       console.error('Usuario malformado en localStorage')
-      navigate('/')
+      navigate('/Login')
     }
   }, [navigate])
 
   const handleLogout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
-    navigate('/')
+    navigate('/Login')
   }
 
   const filteredCards = adminCards.filter(card =>

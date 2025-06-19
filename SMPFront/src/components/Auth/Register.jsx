@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Box,
   Button,
@@ -24,6 +25,7 @@ const MotionText = motion(Text)
 
 export const Register = ({ handleIsLogin }) => {
   const { register, isLoading } = useRegister()
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({ surname: '', name: '', CUI: '', password: '', role: 'USER' })
   const [showPassword, setShowPassword] = useState(false)
   const [CUIValid, setCUIValid] = useState(false)
@@ -231,6 +233,17 @@ export const Register = ({ handleIsLogin }) => {
                 Inicia sesión aquí
               </Text>
             </HStack>
+            <Flex justifyContent="center">
+              <Button
+                variant="link"
+                color="green.500"
+                fontWeight="medium"
+                fontSize="sm"
+                onClick={() => navigate('/')}
+              >
+                ← Volver a la página principal
+              </Button>
+            </Flex>
           </VStack>
         </MotionBox>
       </MotionBox>

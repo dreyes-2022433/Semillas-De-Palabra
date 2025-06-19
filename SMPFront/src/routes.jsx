@@ -1,5 +1,7 @@
-import { AuthPage } from './pages/Auth/AuthPage.jsx'
+import { LoginPage } from './pages/Auth/LoginPage.jsx'
+import { RegisterPage } from './pages/Auth/RegisterPage.jsx'
 import {NotFound} from './pages/Alerts/NotFound.jsx'
+import { InitialPage } from './pages/InitialPage/InitialPage.jsx'
 import MainPage from './pages/MainPage.jsx'
 import { Children } from 'react';
 import { Mainpages } from './pages/MainPages/PageContainer.jsx'
@@ -15,12 +17,14 @@ export const routes = [
   { path: '/main', element: <Mainpages />,children:[
     {index:true, element: <MainPage/>}
   ], },
-  { path: '/', element: <AuthPage /> },
+  { path: '/Login', element: <LoginPage /> },
+  { path: '/Register', element: <RegisterPage /> },
+  { path: '/', element: <InitialPage /> },
   { path: '/admin', element: <AdminDashboard /> },
   { path: '/usersPage', element: <UserActionsDashboard /> },
   { path: '/helper', element: <HelperDashboard />},
   { path: '/loginHelper', element: <LoginUserByHelper />},
-  { path: '/loginAdmin', element: <LoginUserByAdmin />},
+  { path: '/loginAdmin', element: <LoginUserByAdmin />},  
   { path: '/modulesPage', element: <AdminModulesDashboard />},
   { path: '/*', element: <NotFound /> },
 ];
