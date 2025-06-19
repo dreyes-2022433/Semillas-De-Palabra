@@ -1,10 +1,12 @@
-import React from "react"
-import { Search, Home, BookOpen, TrendingUp, Award, Bell, User } from "lucide-react"
-import { useState } from "react"
+import React, { useState } from "react"
+import { Search, Home, BookOpen, TrendingUp, Award, Bell, User, LogOut } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import '../../pages/MainPages/MainPage.css'
 
 export const NavBars = () => {
   const [activeSection, setActiveSection] = useState("inicio")
-  const logoUrl = "https://res.cloudinary.com/dxvwrech8/image/upload/v1750044062/Logo_evrmiv.png" 
+  const navigate = useNavigate()
+  const logoUrl = "https://res.cloudinary.com/dxvwrech8/image/upload/v1750044062/Logo_evrmiv.png"
 
   const sidebarItems = [
     { id: "inicio", label: "Inicio", icon: Home },
@@ -14,6 +16,12 @@ export const NavBars = () => {
     { id: "notificaciones", label: "Notificaciones", icon: Bell },
   ]
 
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    navigate("/") 
+  }
+
   return (
     <div className="main-page-container">
       <header className="main-header">
@@ -21,9 +29,9 @@ export const NavBars = () => {
           <div className="header-left">
             <div className="logo-section">
               <div className="logo-icon">
-                {logoUrl ? (
+                {logoUrl && (
                   <img
-                    src={logoUrl || "/placeholder.svg"}
+                    src={logoUrl}
                     alt="Semillas de Palabras Logo"
                     className="logo-image"
                     onError={(e) => {
@@ -31,7 +39,7 @@ export const NavBars = () => {
                       e.target.nextSibling.style.display = "block"
                     }}
                   />
-                ) : null}
+                )}
                 <span className="logo-fallback">SP</span>
               </div>
               <span className="logo-text">Semillas de Palabras</span>
@@ -43,6 +51,7 @@ export const NavBars = () => {
               <input placeholder="¿Qué quieres aprender?" className="search-input" />
             </div>
           </div>
+
           <div className="header-right">
             <button className="header-button">
               <Bell size={16} />
@@ -55,6 +64,11 @@ export const NavBars = () => {
               </div>
               <span>500 pts</span>
             </div>
+
+            <button className="header-button logout-btn" onClick={handleLogout}>
+              <LogOut size={16} />
+              <span>Cerrar sesión</span>
+            </button>
           </div>
         </div>
       </header>
