@@ -12,10 +12,12 @@ import { HelperDashboard } from './pages/Helper/HelperDashboard.jsx'
 import { LoginUserByHelper } from './pages/Helper/LoginUserByHelper.jsx'
 import { LoginUserByAdmin } from './pages/Admin/LoginUserByAdmin.jsx'
 import { path } from 'framer-motion/client'
+import { Content } from './pages/Content/ContentPage.jsx'
 
 export const routes = [
   { path: '/main', element: <Mainpages />,children:[
-    {index:true, element: <MainPage/>}
+    {index:true, element: <MainPage/>},
+    {path: 'content/:id', element:<Content/> }
   ], },
   { path: '/Login', element: <LoginPage /> },
   { path: '/Register', element: <RegisterPage /> },
