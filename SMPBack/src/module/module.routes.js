@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { 
     createModule, 
     deleteModule, 
+    getModule, 
     getModules, 
     updateModule 
 } from './module.controller.js'
@@ -51,4 +52,5 @@ api.put(
     updateModule
 )
 
+api.post('/getModule', getModule )
 export default api
