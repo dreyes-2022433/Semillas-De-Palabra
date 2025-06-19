@@ -62,7 +62,8 @@ api.post('/uploadVideoLesson', upload.single('video'), async (req, res) => {
         const moduleId = req.body.moduleId
         const name = req.body.name
         const stream = cloudinary.uploader.upload_stream({
-            folder: 'SemillasDePalabra/VideoLessons'
+            folder: 'SemillasDePalabra/VideoLessons',
+            resource_type: 'video'
         },
         async (error, result) => {
             if(error){
@@ -110,6 +111,7 @@ api.post('/uploadVideoLesson', upload.single('video'), async (req, res) => {
                 }
             )
         })
+        stream.end(req.file.buffer)
     }catch(err){
         console.error(err)
         return res.status(500).send(
