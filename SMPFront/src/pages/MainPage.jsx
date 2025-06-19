@@ -4,10 +4,17 @@ import './MainPages/MainPage.css'
 import { getUserModulesRequest } from "../services/api"
 import { useState } from "react"
 import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 export default function MainPage() {
+  const navigate = useNavigate()
+  
   const audioRefs = useRef({})
   const [userModules, setUserModules] = useState([])
   const [contador, setContador] = useState(-1)
+  const [moduleIdClick, setmoduleIdClick] = useState(null)
+
+
+  
 
   const fetchUserModules = async () => {
   
@@ -58,6 +65,11 @@ export default function MainPage() {
                 className={`module-card-large ${index === 0 ? "module-featured" : ""}`}
                 onMouseEnter={() => playAudio(module.module.name, module._id)}
                 onMouseLeave={stopAudio}
+                onClick={() => {
+                  navigate(`/main/content/${module.module._id}`),
+                  setmoduleIdClick(module.module._id)
+                }}
+                
               >
                 <div className="module-image-large">
                   <img

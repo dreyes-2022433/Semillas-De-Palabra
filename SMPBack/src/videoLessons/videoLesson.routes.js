@@ -26,9 +26,7 @@ const api = Router()
 
 api.post(
     '/addVideoLesson', [
-        validateJwt,
-        isAdmin,
-        validAddVideoLesson
+        
     ],
     createVideoLesson
 )

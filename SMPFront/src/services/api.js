@@ -26,6 +26,21 @@ export const registerRequest = async (user) => {
   }
 }
 
+export const getModuleRequest = async (idModule) => {
+  try {
+    
+    const token = localStorage.getItem('token')
+    return await api.post('/v1/module/getModule',{idModule: idModule} , {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+  } catch (error) {
+    return { error: true, error }
+  }
+}
+
+
 export const updateUserRequest = async (data) => {
   try {
     const token = localStorage.getItem('token')

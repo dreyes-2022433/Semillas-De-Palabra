@@ -2,7 +2,7 @@ import React from "react"
 import { Search, Home, BookOpen, TrendingUp, Award, Bell, User } from "lucide-react"
 import { useState } from "react"
 
-export const NavBars = () => {
+export const NavBars = ({children}) => {
   const [activeSection, setActiveSection] = useState("inicio")
   const logoUrl = "https://res.cloudinary.com/dxvwrech8/image/upload/v1750044062/Logo_evrmiv.png" 
 
@@ -76,10 +76,13 @@ export const NavBars = () => {
                     </button>
                   </li>
                 )
-              })}
+              })} 
             </ul>
           </nav>
         </aside>
+        <main className="main-content">
+          {children}
+        </main>
       </div>
     </div>
   )

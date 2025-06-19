@@ -7,14 +7,15 @@ import { getAllUsersByRole, loginAsUser } from '../../services/api'
 
 const MotionBox = motion.div
 
-export const LoginUserByHelper = () => {
+export const LoginUserByAdmin = () => {
   const [activeSection, setActiveSection] = useState('dashboard')
-  const [isHelper, setIsHelper] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [users, setUsers] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [selectedUser, setSelectedUser] = useState(null)
+  const [adminName, setAdminName] = useState('')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -28,11 +29,12 @@ export const LoginUserByHelper = () => {
       if (!user || !token) {
         localStorage.clear()
         navigate('/', { replace: true })
-      } else if (impersonating === 'true' && user.role?.toLowerCase() !== 'helper') {
+      } else if (impersonating === 'true' && user.role?.toLowerCase() !== 'admin') {
         localStorage.clear()
         navigate('/', { replace: true })
-      } else if (user.role?.toLowerCase() === 'helper') {
-        setIsHelper(true)
+      } else if (user.role?.toLowerCase() === 'admin') {
+        setIsAdmin(true)
+        setAdminName(user.name || 'Admin')
       } else {
         localStorage.clear()
         navigate('/', { replace: true })
@@ -62,7 +64,7 @@ export const LoginUserByHelper = () => {
       const token = localStorage.getItem('token')
       const user = storedUser ? JSON.parse(storedUser) : null
 
-      if (!token || (impersonating === 'true' && user?.role?.toLowerCase() !== 'helper')) {
+      if (!token || (impersonating === 'true' && user?.role?.toLowerCase() !== 'admin')) {
         localStorage.clear()
         navigate('/', { replace: true })
       }
@@ -101,7 +103,7 @@ export const LoginUserByHelper = () => {
     `${user.name} ${user.surname}`.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  if (!isHelper) return null
+  if (!isAdmin) return null
 
   return (
     <div className="panel-page">
@@ -119,9 +121,9 @@ export const LoginUserByHelper = () => {
                     e.target.nextSibling.style.display = 'block'
                   }}
                 />
-                <span className="panel-logo-fallback">HP</span>
+                <span className="panel-logo-fallback">AD</span>
               </div>
-              <span className="panel-logo-text">Helper</span>
+              <span className="panel-logo-text">Administrador</span>
             </div>
             <div className="panel-search">
               <div className="panel-search-icon"><Search size={16} /></div>
@@ -136,7 +138,7 @@ export const LoginUserByHelper = () => {
           <div className="panel-header-right">
             <button className="panel-header-button"><Bell size={16} /><span>0</span></button>
             <button className="panel-header-button" onClick={handleLogout}>Cerrar sesión</button>
-            <div className="panel-user"><div className="panel-avatar"><User size={16} /></div><span>Helper</span></div>
+            <div className="panel-user"><div className="panel-avatar"><User size={16} /></div><span>{adminName}</span></div>
           </div>
         </div>
       </header>
@@ -151,7 +153,7 @@ export const LoginUserByHelper = () => {
                   className={`panel-sidebar-item ${activeSection === 'dashboard' ? 'active' : ''}`}
                 >
                   <User size={20} />
-                  <span>Opciones de Helper</span>
+                  <span>Opciones de Administrador</span>
                 </button>
               </li>
             </ul>
@@ -192,8 +194,8 @@ export const LoginUserByHelper = () => {
           </div>
 
           <div style={{ marginTop: "2rem", display: "flex", justifyContent: "center" }}>
-            <button onClick={() => navigate("/helper")} className="animated-back-button">
-              Volver al panel del Helper
+            <button onClick={() => navigate("/admin")} className="animated-back-button">
+              Volver al panel del Administrador
             </button>
           </div>
         </div>
