@@ -29,9 +29,9 @@ export const NavBars = ({children}) => {
           <div className="header-left">
             <div className="logo-section">
               <div className="logo-icon">
-                {logoUrl ? (
+                {logoUrl && (
                   <img
-                    src={logoUrl || "/placeholder.svg"}
+                    src={logoUrl}
                     alt="Semillas de Palabras Logo"
                     className="logo-image"
                     onError={(e) => {
@@ -39,7 +39,7 @@ export const NavBars = ({children}) => {
                       e.target.nextSibling.style.display = "block"
                     }}
                   />
-                ) : null}
+                )}
                 <span className="logo-fallback">SP</span>
               </div>
               <span className="logo-text">Semillas de Palabras</span>
@@ -51,6 +51,7 @@ export const NavBars = ({children}) => {
               <input placeholder="¿Qué quieres aprender?" className="search-input" />
             </div>
           </div>
+
           <div className="header-right">
             <button className="header-button">
               <Bell size={16} />

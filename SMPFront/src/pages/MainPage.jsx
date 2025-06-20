@@ -27,7 +27,6 @@ export default function MainPage() {
   console.log(userModules)
 
   const playAudio = (text, moduleId) => {
-    // Detener cualquier audio que esté reproduciéndose
     Object.values(audioRefs.current).forEach((audio) => {
       if (audio && !audio.paused) {
         audio.pause()
@@ -35,7 +34,6 @@ export default function MainPage() {
       }
     })
 
-    // Usar Web Speech API para reproducir el texto
     if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(text)
       utterance.lang = "es-ES"
@@ -77,12 +75,10 @@ export default function MainPage() {
                     alt={`Módulo ${module.id}`}
                     className="module-img-large"
                     onError={(e) => {
-                      // Si la imagen no carga, usar placeholder con color
                       
                     }}
                   />
 
-                  {/* Indicador de audio */}
                   <div className="audio-indicator-large">
                     <div className="audio-waves-large">
                       <span></span>
@@ -92,7 +88,6 @@ export default function MainPage() {
                     </div>
                   </div>
 
-                  {/* Overlay con efecto hover */}
                   <div className="module-overlay"></div>
                 </div>
               </div>

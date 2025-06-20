@@ -7,6 +7,7 @@ import {
   updateModuleRequest,
   createModuleRequest
 } from '../../services/api'
+import {Input} from "@chakra-ui/react"
 import { ArrowLeft, BookOpen, Trash2, Edit2, Save } from 'lucide-react'
 import toast from 'react-hot-toast'
 import './Styles/Admin.css'
@@ -19,7 +20,7 @@ export const AdminModulesDashboard = () => {
   const navigate = useNavigate()
   const [modules, setModules] = useState([])
   const [search, setSearch] = useState('')
-  const [form, setForm] = useState({ name: '', description: '' })
+  const [form, setForm] = useState({ name: '', description: '', image : null })
   const [isEditing, setIsEditing] = useState(false)
   
 
@@ -34,6 +35,10 @@ export const AdminModulesDashboard = () => {
     }
   }
   
+
+   const handleInputImage = (e) => {
+    setForm({ ...form, image: e.target.files[0] })
+  }
 
   const handleInputChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -58,11 +63,14 @@ export const AdminModulesDashboard = () => {
         toast.error('Error al actualizar')
       }
     } else {
-      const res = await createModuleRequest({
-        name: form.name,
-        description: form.description
-      })
-      if (!res.error && res.data.success) {
+      const formData = new FormData()
+      formData.append('image',form.image)
+      formData.append('name', form.name)
+      formData.append('description', form.description)
+      const res = await createModuleRequest(
+        formData
+    )
+      if (!res.error ) {
         toast.success('Módulo creado')
       } else {
         toast.error('Error al crear módulo')
@@ -170,6 +178,19 @@ export const AdminModulesDashboard = () => {
                   fontSize: '1rem'
                 }}
               />
+               <Input
+                                    type="file"
+                                    onChange={handleInputImage}
+                                   name="video"
+                                    size="lg"
+                                    p={3}
+                                    borderColor="#a7c957"
+                                    _hover={{ borderColor: "#6a994e" }}
+                                    _focus={{
+                                      borderColor: "#386641",
+                                      boxShadow: "0 0 0 3px rgba(167, 201, 87, 0.1)",
+                                    }}
+                                  />
               <button
                 type="submit"
                 style={{

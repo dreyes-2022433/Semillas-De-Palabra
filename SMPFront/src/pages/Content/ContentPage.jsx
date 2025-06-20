@@ -6,9 +6,12 @@ import { useState, useEffect, useRef } from 'react'
 import './ContentPage.css'
 import { getModuleRequest } from '../../services/api'
 import { useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+
 
 export const Content = () => {
   const [module, setModule] = useState({})
+  const navigate = useNavigate()
   const { id } = useParams()
   const [answers, setAnswers] = useState({})
   const [feedback, setFeedback] = useState({})
@@ -21,7 +24,6 @@ export const Content = () => {
 
   useEffect(() => {
     fetchModule()
-    // eslint-disable-next-line
   }, [])
 
   const handleSelectChange = (resourceId, inputIdx, value, options) => {
@@ -163,6 +165,13 @@ export const Content = () => {
                   </Card>
                 )
               })}
+              <Button
+                className="back-button glass"
+                onClick={() => navigate('/main')}
+              >
+                <span className="arrow">←</span>
+                Volver a la página principal
+              </Button>
             </SimpleGrid>
           </>
         )}

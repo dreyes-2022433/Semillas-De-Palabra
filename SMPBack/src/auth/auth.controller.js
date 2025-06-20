@@ -26,7 +26,7 @@ export const initAdminUser = async(req, res) => {
             
             console.log('Admin user created successfully!')
         } else {
-            //console.log('Admin user already exists!')
+           
         }
     } catch (err) {
         console.error(err)

@@ -111,7 +111,7 @@ export const imageQuestionRequest = async (imageData) => {
 export const createModuleRequest = async (moduleData) => {
   try {
     const token = localStorage.getItem('token')
-    return await api.post('/v1/module/addModule', moduleData, {
+    return await api.post('/v1/module/uploadModule', moduleData, {
       headers: {
         Authorization: `Bearer ${token}`
       }
