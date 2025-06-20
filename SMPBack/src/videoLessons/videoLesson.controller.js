@@ -3,13 +3,12 @@ import VideoLesson from './videoLesson.model.js'
 
 export const createVideoLesson = async(req, res) => {
     try {
-        const { name, video, order, module } = req.body
+        const { name, video, module } = req.body
 
         const addVideoLesson = new VideoLesson(
             {
                 name,
                 video,
-                order,
                 module
             }
         )

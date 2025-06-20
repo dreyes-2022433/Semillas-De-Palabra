@@ -1,12 +1,12 @@
-import React, { useState } from "react"
-import { Search, Home, BookOpen, TrendingUp, Award, Bell, User, LogOut } from "lucide-react"
+import React from "react"
+import { Search, Home, BookOpen, TrendingUp, Award, Bell, User ,LogOut    } from "lucide-react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import '../../pages/MainPages/MainPage.css'
 
-export const NavBars = () => {
+export const NavBars = ({children}) => {
   const [activeSection, setActiveSection] = useState("inicio")
   const navigate = useNavigate()
-  const logoUrl = "https://res.cloudinary.com/dxvwrech8/image/upload/v1750044062/Logo_evrmiv.png"
+  const logoUrl = "https://res.cloudinary.com/dxvwrech8/image/upload/v1750044062/Logo_evrmiv.png" 
 
   const sidebarItems = [
     { id: "inicio", label: "Inicio", icon: Home },
@@ -64,7 +64,6 @@ export const NavBars = () => {
               </div>
               <span>500 pts</span>
             </div>
-
             <button className="header-button logout-btn" onClick={handleLogout}>
               <LogOut size={16} />
               <span>Cerrar sesión</span>
@@ -90,10 +89,13 @@ export const NavBars = () => {
                     </button>
                   </li>
                 )
-              })}
+              })} 
             </ul>
           </nav>
         </aside>
+        <main className="main-content">
+          {children}
+        </main>
       </div>
     </div>
   )

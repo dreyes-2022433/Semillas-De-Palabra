@@ -11,6 +11,7 @@ import { ArrowLeft, BookOpen, Trash2, Edit2, Save } from 'lucide-react'
 import toast from 'react-hot-toast'
 import './Styles/Admin.css'
 import { ModuleContent } from '../../components/Modules/ModuleContent'
+import { VideoContent } from '../../components/Modules/ModuleVideo'
 
 const MotionBox = motion.div
 
@@ -231,7 +232,7 @@ export const AdminModulesDashboard = () => {
                         </button  >
                         
                           <ModuleContent moduleId={mod._id}/>
-                    
+                          <VideoContent moduleId={mod._id} />
                       </div>
                     </MotionBox >
                   ))
