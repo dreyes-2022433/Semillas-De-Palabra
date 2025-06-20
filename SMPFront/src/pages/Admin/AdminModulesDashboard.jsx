@@ -70,7 +70,7 @@ export const AdminModulesDashboard = () => {
       const res = await createModuleRequest(
         formData
     )
-      if (!res.error && res.data.success) {
+      if (!res.error ) {
         toast.success('Módulo creado')
       } else {
         toast.error('Error al crear módulo')
