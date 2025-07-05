@@ -5,26 +5,17 @@ import { getUserModulesRequest } from "../services/api"
 import { useState } from "react"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { useUserModules } from "./MainPages/userModuleContext"
 export default function MainPage() {
   const navigate = useNavigate()
   
   const audioRefs = useRef({})
-  const [userModules, setUserModules] = useState([])
+  const { userModules } = useUserModules();
   const [contador, setContador] = useState(-1)
   const [moduleIdClick, setmoduleIdClick] = useState(null)
 
 
-  
 
-  const fetchUserModules = async () => {
-  
-  const res = await getUserModulesRequest()
-    setUserModules(res.data.userModules || [])
-  }
-  useEffect(() => {
-  fetchUserModules()
-  }, [])
-  console.log(userModules)
 
   const playAudio = (text, moduleId) => {
     Object.values(audioRefs.current).forEach((audio) => {
@@ -53,7 +44,7 @@ export default function MainPage() {
 
   return (
     <>
-      <NavBars />
+
       <main className="main-content-visual">
         <div className="modules-container-large">
           <div className="modules-grid-large">
