@@ -10,7 +10,7 @@ export const NavBars = ({ children }) => {
   const navigate = useNavigate()
   
   const logoUrl = "https://res.cloudinary.com/dxvwrech8/image/upload/v1750044062/Logo_evrmiv.png" 
-  const user = JSON.parse(localStorage.getItem('user'))
+  const user = localStorage.getItem('user')
   const { userModules } = useUserModules();
  
   
