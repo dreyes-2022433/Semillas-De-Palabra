@@ -24,7 +24,7 @@ export const Content = () => {
 
   useEffect(() => {
     fetchModule()
-  }, [])
+  }, [id])
 
   const handleSelectChange = (resourceId, inputIdx, value, options) => {
     setAnswers(prev => ({
