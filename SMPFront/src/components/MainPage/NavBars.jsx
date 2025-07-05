@@ -1,27 +1,26 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Search, Home, BookOpen, TrendingUp, Award, Bell, User ,LogOut    } from "lucide-react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-export const NavBars = ({children}) => {
+
+import { useUserModules } from "../../pages/MainPages/userModuleContext"
+export const NavBars = ({ children }) => {
   const [activeSection, setActiveSection] = useState("inicio")
   const navigate = useNavigate()
+  
   const logoUrl = "https://res.cloudinary.com/dxvwrech8/image/upload/v1750044062/Logo_evrmiv.png" 
-
-  const sidebarItems = [
-    { id: "inicio", label: "Inicio", icon: Home },
-    { id: "mis-rutas", label: "Mis Rutas", icon: BookOpen },
-    { id: "mi-progreso", label: "Mi Progreso", icon: TrendingUp },
-    { id: "mis-certificados", label: "Mis Certificados", icon: Award },
-    { id: "notificaciones", label: "Notificaciones", icon: Bell },
-  ]
-
+  const user = localStorage.getItem('user')
+  const { userModules } = useUserModules();
+ 
+  
+ 
   const handleLogout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("user")
     navigate("/") 
   }
-
+ 
   return (
     <div className="main-page-container">
       <header className="main-header">
@@ -40,15 +39,9 @@ export const NavBars = ({children}) => {
                     }}
                   />
                 )}
-                <span className="logo-fallback">SP</span>
+                <span className="logo-fallback"></span>
               </div>
               <span className="logo-text">Semillas de Palabras</span>
-            </div>
-            <div className="search-section">
-              <div className="search-icon">
-                <Search size={16} />
-              </div>
-              <input placeholder="¿Qué quieres aprender?" className="search-input" />
             </div>
           </div>
 
@@ -62,7 +55,7 @@ export const NavBars = ({children}) => {
               <div className="user-avatar">
                 <User size={16} />
               </div>
-              <span>500 pts</span>
+              <span>{user.name}</span>
             </div>
             <button className="header-button logout-btn" onClick={handleLogout}>
               <LogOut size={16} />
@@ -75,22 +68,26 @@ export const NavBars = ({children}) => {
       <div className="main-layout">
         <aside className="sidebar">
           <nav className="sidebar-nav">
-            <ul className="sidebar-list">
-              {sidebarItems.map((item) => {
-                const Icon = item.icon
-                return (
-                  <li key={item.id}>
-                    <button
-                      onClick={() => setActiveSection(item.id)}
-                      className={`sidebar-item ${activeSection === item.id ? "active" : ""}`}
-                    >
-                      <Icon size={20} />
-                      <span>{item.label}</span>
-                    </button>
-                  </li>
-                )
-              })} 
-            </ul>
+           <ul className="sidebar-list">
+            
+    {userModules.length === 0 ? (
+    <li>No tienes módulos asignados.</li>
+      ) : (
+    userModules.map((item) => (
+      <li key={item._id}>
+        <button
+          onClick={() =>{
+            navigate(`/main/content/${item.module._id}`),
+           setActiveSection(item._id)}}
+          className={`sidebar-item ${activeSection === item._id ? "active" : ""}`}
+        >
+          <BookOpen size={20} />
+          <span>{item.module.name}</span>
+        </button>
+      </li>
+    ))
+  )}
+</ul>
           </nav>
         </aside>
         <main className="main-content">
