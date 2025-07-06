@@ -66,7 +66,7 @@ export const register = async(req, res)=>{
         user.role = 'USER'
         await user.save()
 
-        await moduleAssigment(user._id)
+        
 
         return res.send(
             {
@@ -113,7 +113,9 @@ export const login = async(req, res)=>{
                 name: user.name,
                 role: user.role
             }
+            await moduleAssigment(user._id)
             let token = await generateJwt(loggerUser)
+            
             return res.send(
                 {
                     message: `Welcome ${user.name} ${user.surname}`,

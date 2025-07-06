@@ -2,18 +2,31 @@ import UserModule from './userModule.model.js'
 import Module from '../module/module.model.js'
 import User from '../user/user.model.js'
 
-export const moduleAssigment = async(userId) => {
+export const moduleAssigment = async (userId) => {
     try {
-        const modules = await Module.find()
-        const userModuleAssignments = modules.map(mod => ({
+        const modules = await Module.find();
+        const userModules = await UserModule.find({ user: userId });
+
+        
+        const assignedModuleIds = userModules.map(um => um.module.toString());
+
+        
+        const modulesToAssign = modules.filter(mod => !assignedModuleIds.includes(mod._id.toString()));
+
+        if (modulesToAssign.length === 0) {
+            
+            return;
+        }
+
+        const userModuleAssignments = modulesToAssign.map(mod => ({
             user: userId,
             module: mod._id,
             made: false
-        }))
+        }));
 
-        await UserModule.insertMany(userModuleAssignments)
-    } catch (err) { 
-        console.error(err)
+        await UserModule.insertMany(userModuleAssignments);
+    } catch (err) {
+        console.error(err);
     }
 }
 
